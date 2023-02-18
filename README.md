@@ -1,5 +1,5 @@
 # Meta Testing
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/laragear/metatesting.svg)](https://packagist.org/packages/laragear/metatesting)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/laragear/meta-testing.svg)](https://packagist.org/packages/laragear/meta-testing)
 [![Latest stable test run](https://github.com/Laragear/MetaTesting/workflows/Tests/badge.svg)](https://github.com/Laragear/MetaTesting/actions)
 [![Codecov coverage](https://codecov.io/gh/Laragear/MetaTesting/branch/1.x/graph/badge.svg?token=bogXap7Rjn)](https://codecov.io/gh/Laragear/MetaTesting)
 [![Maintainability](https://api.codeclimate.com/v1/badges/70970a4557ebd90484fd/maintainability)](https://codeclimate.com/github/Laragear/MetaTesting/maintainability)
