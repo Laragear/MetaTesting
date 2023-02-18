@@ -1,0 +1,8 @@
+/build
+/docs
+/vendor
+/coverage
+/.idea
+.phpunit.result.cache
+phpunit.xml.dist.bak
+composer.lock
