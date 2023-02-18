@@ -10,6 +10,7 @@ use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -23,6 +24,7 @@ use function now;
 use function preg_replace;
 use function strtolower;
 use function strtoupper;
+use function tap;
 
 /**
  * @mixin \Orchestra\Testbench\TestCase
@@ -251,14 +253,15 @@ trait InteractsWithServiceProvider
      * Assert a route exists for the given name.
      *
      * @param  string  $name
-     * @return void
+     * @return \Illuminate\Routing\Route
      */
-    protected function assertRouteByName(string $name): void
+    protected function assertRouteByName(string $name): Route
     {
-        static::assertNotNull(
-            $this->app->make('router')->getRoutes()->getByName($name),
-            "There is no route not named '$name'.",
-        );
+        $route = $this->app->make('router')->getRoutes()->getByName($name);
+
+        static::assertNotNull($route, "There is no route not named '$name'.");
+
+        return $route;
     }
 
     /**
@@ -266,9 +269,9 @@ trait InteractsWithServiceProvider
      *
      * @param  string  $uri
      * @param  string  $verb
-     * @return void
+     * @return \Illuminate\Routing\Route
      */
-    protected function assertRouteByUri(string $uri, string $verb = 'GET'): void
+    protected function assertRouteByUri(string $uri, string $verb = 'GET'): Route
     {
         $verb = strtoupper($verb);
 
@@ -279,15 +282,17 @@ trait InteractsWithServiceProvider
         }
 
         static::assertThat($route, static::logicalNot(static::isNull()));
+
+        return $route;
     }
 
     /**
      * Assert a route exists for the given action.
      *
      * @param  string|string[]|array{class-string,string}  $action
-     * @return void
+     * @return \Illuminate\Routing\Route
      */
-    protected function assertRouteByAction(string|array $action): void
+    protected function assertRouteByAction(string|array $action): Route
     {
         if (is_array($action)) {
             $action = implode('@', $action);
@@ -297,10 +302,11 @@ trait InteractsWithServiceProvider
             static::fail('Cannot assert a route with a closure-based action.');
         }
 
-        static::assertNotNull(
-            $this->app->make('router')->getRoutes()->getByAction($action),
-            "There is no route by the action '$action'.",
-        );
+        $route = $this->app->make('router')->getRoutes()->getByAction($action);
+
+        static::assertNotNull($route, "There is no route by the action '$action'.");
+
+        return $route;
     }
 
     /**
