@@ -22,9 +22,9 @@ use function implode;
 use function is_array;
 use function now;
 use function preg_replace;
+use function realpath;
 use function strtolower;
 use function strtoupper;
-use function tap;
 
 /**
  * @mixin \Orchestra\Testbench\TestCase
@@ -139,7 +139,9 @@ trait InteractsWithServiceProvider
         static::assertArrayHasKey($tag, ServiceProvider::$publishGroups, "The '$tag' is not a publishable tag.");
 
         static::assertContains(
-            $file, ServiceProvider::$publishGroups[$tag], "The '$file' is not publishable in the '$tag' tag.",
+            realpath($file) ?: $file,
+            ServiceProvider::$publishGroups[$tag],
+            "The '$file' is not publishable in the '$tag' tag.",
         );
     }
 
@@ -185,7 +187,11 @@ trait InteractsWithServiceProvider
         $namespaces = $this->app->make('translator')->getLoader()->namespaces();
 
         static::assertArrayHasKey($namespace, $namespaces, "The '$namespace' translations were not registered.");
-        static::assertSame($path, $namespaces[$namespace], "The '$namespace' does not correspond to the path '$path'.");
+        static::assertSame(
+            realpath($path) ?: $path,
+            $namespaces[$namespace],
+            "The '$namespace' does not correspond to the path '$path'."
+        );
     }
 
     /**
@@ -200,8 +206,11 @@ trait InteractsWithServiceProvider
         $namespaces = $this->app->make('view')->getFinder()->getHints();
 
         static::assertArrayHasKey($namespace, $namespaces, "The '$namespace' views were not registered.");
-        static::assertContains($path, $namespaces[$namespace],
-            "The '$namespace' does not correspond to the path '$path'.");
+        static::assertContains(
+            realpath($path) ?: $path,
+            $namespaces[$namespace],
+            "The '$namespace' does not correspond to the path '$path'."
+        );
     }
 
     /**
