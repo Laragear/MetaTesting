@@ -59,14 +59,15 @@ class ServiceProviderTest extends TestCase
 
 The available assertions are in this table:
 
-| Methods                       |                            |                               |
-|-------------------------------|----------------------------|-------------------------------|
-| `assertServices()`            | `assertViews()`            | `assertMiddlewareInGroup()`   |
-| `assertSingletons()`          | `assertBladeComponent()`   | `assertGateHasPolicy()`       |
-| `assertConfigMerged()`        | `assertBladeDirectives()`  | `assertGateHasPolicy()`       |
-| `assertPublishes()`           | `assertValidationRules()`  | `assertScheduledTask()`       |
-| `assertPublishesMigrations()` | `assertMiddlewareAlias()`  | `assertScheduledTaskRunsAt()` |
-| `assertTranslations()`        | `assertGlobalMiddleware()` | `assertMacro()`               |
+| Methods                       |                           |                               |
+|-------------------------------|---------------------------|-------------------------------|
+| `assertServices()`            | `assertBladeComponent()`  | `assertGlobalMiddleware()`    |
+| `assertSingletons()`          | `assertBladeDirectives()` | `assertMiddlewareInGroup()`   |
+| `assertConfigMerged()`        | `assertValidationRules()` | `assertGateHasPolicy()`       |
+| `assertPublishes()`           | `assertRouteByName()`     | `assertScheduledTask()`       |
+| `assertPublishesMigrations()` | `assertRouteByUri()`      | `assertScheduledTaskRunsAt()` |
+| `assertTranslations()`        | `assertRouteByAction()`   | `assertMacro()`               |
+| `assertViews()`               | `assertMiddlewareAlias()` |                               |
 
 ### Service Helpers
 

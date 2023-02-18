@@ -501,6 +501,108 @@ class InteractsWithServiceProviderTest extends TestCase
         $this->assertHasValidationRules('bar');
     }
 
+    public function test_assert_route_by_name(): void
+    {
+        $this->app->register(new class($this->app) extends ServiceProvider {
+            public function boot(): void
+            {
+                Route::name('exists')->get('test', fn() => true);
+            }
+        });
+
+        $this->assertRouteByName('exists');
+    }
+
+    public function test_assert_route_by_name_fails_if_does_not_exists(): void
+    {
+        $this->app->register(new class($this->app) extends ServiceProvider {
+            public function boot(): void
+            {
+                Route::name('exists')->get('test', fn() => true);
+            }
+        });
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage("There is no route not named 'invalid'.");
+
+        $this->assertRouteByName('invalid');
+    }
+
+    public function test_assert_route_by_uri(): void
+    {
+        $this->app->register(new class($this->app) extends ServiceProvider {
+            public function boot(): void
+            {
+                Route::get('test', fn() => true)->name('exists');
+                Route::post('test/{foo}', fn() => true)->name('exists');
+            }
+        });
+
+        $this->assertRouteByUri('test');
+        $this->assertRouteByUri('test/bar', 'post');
+    }
+
+    public function test_assert_route_by_uri_fails_if_does_not_exists(): void
+    {
+        $this->app->register(new class($this->app) extends ServiceProvider {
+            public function boot(): void
+            {
+                Route::post('test/{foo}', fn() => true);
+            }
+        });
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage("There is no route by the URI 'POST:test'.");
+
+        $this->assertRouteByUri('test', 'post');
+    }
+
+    public function test_assert_route_by_action(): void
+    {
+        $this->app->register(new class($this->app) extends ServiceProvider {
+            public function boot(): void
+            {
+                Route::post('foo', 'Foo@bar')->name('exists');
+                Route::post('baz', [\Baz::class, 'quz'])->name('exists');
+            }
+        });
+
+        $this->assertRouteByAction([\Foo::class, 'bar']);
+        $this->assertRouteByAction('Baz@quz');
+    }
+
+    public function test_assert_route_by_action_fails_if_does_not_exists(): void
+    {
+        $this->app->register(new class($this->app) extends ServiceProvider {
+            public function boot(): void
+            {
+                Route::post('foo', 'Foo@bar')->name('exists');
+                Route::post('baz', [\Baz::class, 'quz'])->name('exists');
+            }
+        });
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage("There is no route by the action 'Foo@quz'.");
+
+        $this->assertRouteByAction('Foo@quz');
+    }
+
+    public function test_assert_route_by_action_fails_if_its_closure(): void
+    {
+        $this->app->register(new class($this->app) extends ServiceProvider {
+            public function boot(): void
+            {
+                Route::post('foo', 'Foo@bar')->name('exists');
+                Route::post('baz', [\Baz::class, 'quz'])->name('exists');
+            }
+        });
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage("Cannot assert a route with a closure-based action.");
+
+        $this->assertRouteByAction('Closure');
+    }
+
     public function test_assert_middleware_aliases(): void
     {
         $this->app->register(new class($this->app) extends ServiceProvider {

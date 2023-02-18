@@ -248,6 +248,62 @@ trait InteractsWithServiceProvider
     }
 
     /**
+     * Assert a route exists for the given name.
+     *
+     * @param  string  $name
+     * @return void
+     */
+    protected function assertRouteByName(string $name): void
+    {
+        static::assertNotNull(
+            $this->app->make('router')->getRoutes()->getByName($name),
+            "There is no route not named '$name'.",
+        );
+    }
+
+    /**
+     * Assert a route exists for the given URI and HTTP verb.
+     *
+     * @param  string  $uri
+     * @param  string  $verb
+     * @return void
+     */
+    protected function assertRouteByUri(string $uri, string $verb = 'GET'): void
+    {
+        $verb = strtoupper($verb);
+
+        try {
+            $route = $this->app->make('router')->getRoutes()->match(Request::create($uri, $verb));
+        } catch (NotFoundHttpException) {
+            static::fail("There is no route by the URI '$verb:$uri'.");
+        }
+
+        static::assertThat($route, static::logicalNot(static::isNull()));
+    }
+
+    /**
+     * Assert a route exists for the given action.
+     *
+     * @param  string|string[]|array{class-string,string}  $action
+     * @return void
+     */
+    protected function assertRouteByAction(string|array $action): void
+    {
+        if (is_array($action)) {
+            $action = implode('@', $action);
+        }
+
+        if (strtolower($action) === 'closure') {
+            static::fail('Cannot assert a route with a closure-based action.');
+        }
+
+        static::assertNotNull(
+            $this->app->make('router')->getRoutes()->getByAction($action),
+            "There is no route by the action '$action'.",
+        );
+    }
+
+    /**
      * Assert the middleware are aliased.
      *
      * @param  string  $alias
