@@ -206,11 +206,18 @@ trait InteractsWithServiceProvider
         $namespaces = $this->app->make('view')->getFinder()->getHints();
 
         static::assertArrayHasKey($namespace, $namespaces, "The '$namespace' views were not registered.");
-        static::assertContains(
-            realpath($path) ?: $path,
-            $namespaces[$namespace],
-            "The '$namespace' does not correspond to the path '$path'."
-        );
+
+        $path = realpath($path) ?: $path;
+
+        static::assertThat($namespaces[$namespace], static::callback(static function (array $paths) use ($path): bool {
+            foreach ($paths as $originPath) {
+                if (realpath($originPath) === $path) {
+                    return true;
+                }
+            }
+
+            return false;
+        }));
     }
 
     /**
