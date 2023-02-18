@@ -211,13 +211,15 @@ trait InteractsWithServiceProvider
 
         static::assertThat($namespaces[$namespace], static::callback(static function (array $paths) use ($path): bool {
             foreach ($paths as $originPath) {
-                if (realpath($originPath) === $path) {
+                $originPath = realpath($originPath) ?: $originPath;
+
+                if ($path === $originPath) {
                     return true;
                 }
             }
 
             return false;
-        }));
+        }), "The '$namespace' does not correspond to the path '$path'.");
     }
 
     /**
