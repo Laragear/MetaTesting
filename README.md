@@ -1,9 +1,9 @@
 # Meta Testing
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/laragear/meta.svg)](https://packagist.org/packages/laragear/meta)
-[![Latest stable test run](https://github.com/Laragear/Meta/workflows/Tests/badge.svg)](https://github.com/Laragear/Meta/actions)
-[![Codecov coverage](https://codecov.io/gh/Laragear/Meta/branch/1.x/graph/badge.svg?token=bogXap7Rjn)](https://codecov.io/gh/Laragear/Meta)
-[![Maintainability](https://api.codeclimate.com/v1/badges/184a74d77f15271129d3/maintainability)](https://codeclimate.com/github/Laragear/Meta/maintainability)
-[![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=Laragear_Meta&metric=alert_status)](https://sonarcloud.io/dashboard?id=Laragear_Meta)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/laragear/metatesting.svg)](https://packagist.org/packages/laragear/metatesting)
+[![Latest stable test run](https://github.com/Laragear/MetaTesting/workflows/Tests/badge.svg)](https://github.com/Laragear/MetaTesting/actions)
+[![Codecov coverage](https://codecov.io/gh/Laragear/MetaTesting/branch/1.x/graph/badge.svg?token=bogXap7Rjn)](https://codecov.io/gh/Laragear/MetaTesting)
+[![Maintainability](https://api.codeclimate.com/v1/badges/184a74d77f15271129d3/maintainability)](https://codeclimate.com/github/Laragear/MetaTesting/maintainability)
+[![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=Laragear_MetaTesting&metric=alert_status)](https://sonarcloud.io/dashboard?id=Laragear_MetaTesting)
 [![Laravel Octane Compatibility](https://img.shields.io/badge/Laravel%20Octane-Compatible-success?style=flat&logo=laravel)](https://laravel.com/docs/9.x/octane#introduction)
 
 A Laravel Package for testing Laravel Packages.
@@ -19,7 +19,7 @@ public function test_has_service_registered(): void
 
 [![](.github/assets/support.png)](https://github.com/sponsors/DarkGhostHunter)
 
-Your support allows me to keep this package free, up-to-date and maintainable. Alternatively, you can **[spread the word!](http://twitter.com/share?text=I%20am%20using%20this%20cool%20PHP%20package&url=https://github.com%2FLaragear%2FMeta&hashtags=PHP,Laravel)**
+Your support allows me to keep this package free, up-to-date and maintainable. Alternatively, you can **[spread the word!](http://twitter.com/share?text=I%20am%20using%20this%20cool%20PHP%20package&url=https://github.com%2FLaragear%2FMetaTesting&hashtags=PHP,Laravel)**
 
 ## Requirements
 
@@ -31,13 +31,12 @@ Your support allows me to keep this package free, up-to-date and maintainable. A
 Require this package into your project using Composer:
 
 ```bash
-composer require --dev laragear/meta
+composer require --dev laragear/meta-testing
 ```
 
 **DO NOT** install this package outside `require-dev`, unless you plan to use this package in production environments. 
 
 ## Testing
-
 
 ### Testing the Service Provider
 
@@ -45,7 +44,7 @@ The `InteractsWithServiceProvider` allows to quickly test if the Service Provide
 
 ```php
 use Orchestra\Testbench\TestCase
-use Laragear\Meta\InteractsWithServiceProvider;
+use Laragear\MetaTesting\InteractsWithServiceProvider;
 
 class ServiceProviderTest extends TestCase
 {
@@ -111,7 +110,7 @@ You can test a middleware easily using the `InteractsWithMiddleware` trait and i
 ```php
 use Illuminate\Http\Request;
 use Vendor\Package\Http\Middleware\MyMiddleware;
-use Laragear\Meta\Http\Middleware\InteractsWithMiddleware;
+use Laragear\MetaTesting\Http\Middleware\InteractsWithMiddleware;
 
 public function test_middleware(): void
 {
