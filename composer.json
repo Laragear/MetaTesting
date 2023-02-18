@@ -1,5 +1,5 @@
 {
-    "name": "laragear/meta",
+    "name": "laragear/meta-testing",
     "description": "A Laravel Package helper for Laravel Packages",
     "type": "library",
     "license": "MIT",
@@ -7,6 +7,9 @@
     "prefer-stable": true,
     "keywords": [
         "laravel",
+        "testing",
+        "meta",
+        "library",
         "package"
     ],
     "authors": [
