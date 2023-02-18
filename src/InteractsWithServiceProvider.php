@@ -9,14 +9,20 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use ReflectionException;
 use ReflectionMethod;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use function implode;
+use function is_array;
 use function now;
 use function preg_replace;
+use function strtolower;
+use function strtoupper;
 
 /**
  * @mixin \Orchestra\Testbench\TestCase
@@ -60,7 +66,7 @@ trait InteractsWithServiceProvider
             static::assertThat(
                 $this->app->bound($service),
                 static::isTrue(),
-                "The '$service' was not registered in the Service Container."
+                "The '$service' was not registered in the Service Container.",
             );
         }
     }
@@ -79,7 +85,7 @@ trait InteractsWithServiceProvider
             static::assertThat(
                 $this->app->isShared($service),
                 static::isTrue(),
-                "The '$service' is registered as a shared instance in the Service Container."
+                "The '$service' is registered as a shared instance in the Service Container.",
             );
         }
     }
@@ -109,13 +115,13 @@ trait InteractsWithServiceProvider
         static::assertThat(
             $this->app->make('config')->has($configKey),
             static::isTrue(),
-            "The configuration file was not merged as '$configKey'."
+            "The configuration file was not merged as '$configKey'.",
         );
 
         static::assertSame(
             $this->app->make('files')->getRequire($file),
             $this->app->make('config')->get($configKey),
-            "The configuration file in '$file' is not the same for '$configKey'."
+            "The configuration file in '$file' is not the same for '$configKey'.",
         );
     }
 
@@ -131,7 +137,7 @@ trait InteractsWithServiceProvider
         static::assertArrayHasKey($tag, ServiceProvider::$publishGroups, "The '$tag' is not a publishable tag.");
 
         static::assertContains(
-            $file, ServiceProvider::$publishGroups[$tag], "The '$file' is not publishable in the '$tag' tag."
+            $file, ServiceProvider::$publishGroups[$tag], "The '$file' is not publishable in the '$tag' tag.",
         );
     }
 
@@ -159,7 +165,7 @@ trait InteractsWithServiceProvider
                 static::assertContains(
                     $this->app->databasePath("migrations/$filename"),
                     ServiceProvider::$publishGroups[$tag],
-                    "The '$filename' is not publishable in the '$tag' tag."
+                    "The '$filename' is not publishable in the '$tag' tag.",
                 );
             }
         });
@@ -192,7 +198,8 @@ trait InteractsWithServiceProvider
         $namespaces = $this->app->make('view')->getFinder()->getHints();
 
         static::assertArrayHasKey($namespace, $namespaces, "The '$namespace' views were not registered.");
-        static::assertContains($path, $namespaces[$namespace], "The '$namespace' does not correspond to the path '$path'.");
+        static::assertContains($path, $namespaces[$namespace],
+            "The '$namespace' does not correspond to the path '$path'.");
     }
 
     /**
@@ -252,7 +259,8 @@ trait InteractsWithServiceProvider
         $registered = $this->app->make('router')->getMiddleware();
 
         static::assertArrayHasKey($alias, $registered, "The '$alias' alias was not registered as middleware.");
-        static::assertSame($middleware, $registered[$alias], "The '$middleware' was not aliased as '$alias' middleware.");
+        static::assertSame($middleware, $registered[$alias],
+            "The '$middleware' was not aliased as '$alias' middleware.");
     }
 
     /**
@@ -269,7 +277,7 @@ trait InteractsWithServiceProvider
             static::assertThat(
                 $kernel->hasMiddleware($class),
                 static::isTrue(),
-                "The '$class' middleware was not registered as global."
+                "The '$class' middleware was not registered as global.",
             );
         }
     }
@@ -286,13 +294,13 @@ trait InteractsWithServiceProvider
         $list = $this->app->make(Kernel::class)->getMiddlewareGroups();
 
         static::assertThat(
-            $list, static::arrayHasKey($group), "The middleware group '$group' is not defined by default."
+            $list, static::arrayHasKey($group), "The middleware group '$group' is not defined by default.",
         );
 
         static::assertThat(
             $list[$group],
             static::containsEqual($middleware),
-            "The middleware '$middleware' is not part of the '$group' group."
+            "The middleware '$middleware' is not part of the '$group' group.",
         );
     }
 
@@ -334,9 +342,9 @@ trait InteractsWithServiceProvider
             }
 
             static::assertThat(
-                $method->isPublic() && ! $method->isStatic(),
+                $method->isPublic() && !$method->isStatic(),
                 static::isTrue(),
-                "The '$ability' ability declared in '$target' is private/protected or static."
+                "The '$ability' ability declared in '$target' is private/protected or static.",
             );
         }
     }
@@ -393,7 +401,7 @@ trait InteractsWithServiceProvider
 
         foreach ($macros as $macro) {
             static::assertThat(
-                $macroable::{$call}($macro), static::isTrue(), "The macro '$macro' for '$macroable' is missing."
+                $macroable::{$call}($macro), static::isTrue(), "The macro '$macro' for '$macroable' is missing.",
             );
         }
     }
