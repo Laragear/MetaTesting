@@ -24,7 +24,7 @@
         "issues": "https://github.com/Laragear/MetaTesting/issues"
     },
     "require": {
-        "php": "^8.1"
+        "php": "8.*"
     },
     "require-dev": {
         "mockery/mockery": "^1.5",
