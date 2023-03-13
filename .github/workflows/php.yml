@@ -55,14 +55,14 @@ jobs:
           - "8.0"
           - "8.1"
           - "8.2"
-        laravel-constrain:
+        laravel-constraint:
           - "9.*"
           - "10.*"
         dependencies:
           - "lowest"
           - "highest"
         exclude:
-          - laravel-constrain: "10.*"
+          - laravel-constraint: "10.*"
             php-version: "8.0"
     steps:
       - name: "Set up PHP"
@@ -79,6 +79,7 @@ jobs:
         uses: "ramsey/composer-install@v2"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
+          composer-options: "--with=laravel/framework:${{ matrix.laravel-constraint }}"
 
       - name: "Execute unit tests"
         run: "composer run-script test"
@@ -103,17 +104,8 @@ jobs:
       - name: "Checkout code"
         uses: "actions/checkout@v3"
 
-      - name: "Validate Composer configuration"
-        run: "composer validate --strict"
-
       - name: "Install dependencies"
         uses: "ramsey/composer-install@v2"
-        with:
-          dependency-versions: "${{ matrix.dependencies }}"
-          composer-options: "--with=laravel/framework:${{ matrix.laravel-constraint }}"
-
-      - name: "Execute unit tests"
-        run: "composer run-script test"
 
       - name: "Execute static analysis"
         run: "composer exec -- phpstan analyze -l 5 src/"
