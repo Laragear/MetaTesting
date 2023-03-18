@@ -35,6 +35,13 @@ class InteractsWithServiceProviderTest extends TestCase
 {
     use InteractsWithServiceProvider;
 
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        ServiceProvider::$publishGroups = [];
+    }
+
     public function test_assert_has_driver(): void
     {
         $this->app->instance('manager', new class($this->app) extends Manager {
@@ -227,12 +234,12 @@ class InteractsWithServiceProviderTest extends TestCase
     public function test_assert_publishes_migration(): void
     {
         $foo = Mockery::mock(SplFileInfo::class);
-        $foo->expects('getRealPath')->andReturn('/package/vendor/migrations/create_foo_table.php');
-        $foo->expects('getFilename')->twice()->andReturn('create_foo_table.php');
+        $foo->expects('getRealPath')->times(3)->andReturn('/package/vendor/migrations/create_foo_table.php');
+        $foo->expects('getFilename')->times(4)->andReturn('create_foo_table.php');
 
         $bar = Mockery::mock(SplFileInfo::class);
-        $bar->expects('getRealPath')->andReturn('/package/vendor/migrations/2020_01_01_173055_create_bar_table.php');
-        $bar->expects('getFilename')->twice()->andReturn('2020_01_01_173055_create_bar_table.php');
+        $bar->expects('getRealPath')->times(3)->andReturn('/package/vendor/migrations/2020_01_01_173055_create_bar_table.php');
+        $bar->expects('getFilename')->times(4)->andReturn('2020_01_01_173055_create_bar_table.php');
 
         File::expects('files')->twice()->with('/package/vendor/migrations')->andReturn([$foo, $bar]);
 
@@ -251,8 +258,8 @@ class InteractsWithServiceProviderTest extends TestCase
     public function test_assert_publishes_migration_with_different_tag(): void
     {
         $foo = Mockery::mock(SplFileInfo::class);
-        $foo->expects('getRealPath')->andReturn('/package/vendor/migrations/create_foo_table.php');
-        $foo->expects('getFilename')->twice()->andReturn('create_foo_table.php');
+        $foo->expects('getRealPath')->times(3)->andReturn('/package/vendor/migrations/create_foo_table.php');
+        $foo->expects('getFilename')->times(4)->andReturn('create_foo_table.php');
 
         File::expects('files')->twice()->with('/package/vendor/migrations')->andReturn([$foo]);
 
@@ -309,6 +316,87 @@ class InteractsWithServiceProviderTest extends TestCase
         $this->expectExceptionMessage("The 'invalid-tag' is not a publishable tag");
 
         $this->assertPublishesMigrations('/package/vendor/migrations', 'invalid-tag');
+    }
+
+    public function test_assert_publishes_migration_fails_when_publishes_outside_tag(): void
+    {
+        $foo = Mockery::mock(SplFileInfo::class);
+        $foo->expects('getRealPath')->times(2)->andReturn('/package/vendor/migrations/create_foo_table.php');
+        $foo->expects('getFilename')->times(2)->andReturn('create_foo_table.php');
+
+        File::expects('files')->twice()->with('/package/vendor/migrations')->andReturn([$foo]);
+
+        $this->app->register(new class($this->app) extends ServiceProvider {
+            use PublishesMigrations;
+
+            public function boot(): void
+            {
+                $this->publishes([
+                    '/invalid.php' => $this->app->databasePath('invalid.php')
+                ], 'migrations');
+
+                $this->publishesMigrations('/package/vendor/migrations', 'not-migrations');
+            }
+        });
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage("The 'create_foo_table.php' is not publishable in the 'migrations' tag.");
+
+        $this->assertPublishesMigrations('/package/vendor/migrations');
+    }
+
+    public function test_assert_publishes_migration_fails_when_publishes_outside_migrations_directory(): void
+    {
+        $foo = Mockery::mock(SplFileInfo::class);
+        $foo->expects('getRealPath')->times(2)->andReturn('/package/vendor/migrations/create_foo_table.php');
+        $foo->expects('getFilename')->times(2)->andReturn('create_foo_table.php');
+
+        File::expects('files')->once()->with('/package/vendor/migrations')->andReturn([$foo]);
+
+        $this->app->register(new class($this->app) extends ServiceProvider {
+            use PublishesMigrations;
+
+            public function boot(): void
+            {
+                $this->publishes([
+                    '/package/vendor/migrations/create_foo_table.php' =>
+                        $this->app->databasePath('not-migrations/invalid.php')
+                ], 'migrations');
+            }
+        });
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage("The 'create_foo_table.php' is not published in the [database/migrations] path.");
+
+        $this->assertPublishesMigrations('/package/vendor/migrations');
+    }
+
+    public function test_assert_publishes_migration_fails_when_migrations_not_named_by_convention(): void
+    {
+        $foo = Mockery::mock(SplFileInfo::class);
+        $foo->expects('getRealPath')->twice()->andReturn('/package/vendor/migrations/create_foo_table.php');
+        $foo->expects('getFilename')->times(3)->andReturn('create_foo_table.php');
+
+        File::expects('files')->once()->with('/package/vendor/migrations')->andReturn([$foo]);
+
+        $this->app->register(new class($this->app) extends ServiceProvider {
+            use PublishesMigrations;
+
+            public function boot(): void
+            {
+                $this->publishes([
+                    '/package/vendor/migrations/create_foo_table.php' =>
+                        $this->app->databasePath('migrations/invalid.php')
+                ], 'migrations');
+            }
+        });
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage(
+            "The 'create_foo_table.php' is not published using [YYYY_MM_DD_HHMMSS_NAME.php] naming convention."
+        );
+
+        $this->assertPublishesMigrations('/package/vendor/migrations');
     }
 
     public function test_assert_translations(): void

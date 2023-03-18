@@ -20,8 +20,6 @@ use ReflectionMethod;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use function implode;
 use function is_array;
-use function now;
-use function preg_replace;
 use function realpath;
 use function strtolower;
 use function strtoupper;
@@ -155,24 +153,35 @@ trait InteractsWithServiceProvider
     protected function assertPublishesMigrations(string $dir, string $tag = 'migrations'): void
     {
         static::assertArrayHasKey($tag, ServiceProvider::$publishGroups, "The '$tag' is not a publishable tag.");
+        static::assertNotEmpty(ServiceProvider::$publishGroups[$tag], "The '$tag' ha no files to publish.");
 
         $files = $this->app->make('files')->files($dir);
 
         static::assertNotEmpty($files, "The '$dir' has no migration files.");
 
-        $this->travelTo(now()->startOfSecond(), function () use ($tag, $files): void {
-            $prefix = now()->format('Y_m_d_His');
+        foreach ($files as $file) {
+            // Check the file is published under the tag.
+            static::assertArrayHasKey(
+                $file->getRealPath(),
+                ServiceProvider::$publishGroups[$tag],
+                "The '{$file->getFilename()}' is not publishable in the '$tag' tag."
+            );
 
-            foreach ($files as $file) {
-                $filename = $prefix.'_'.preg_replace('/^[\d|_]+/', '', $file->getFilename());
+            $migration = ServiceProvider::$publishGroups[$tag][$file->getRealPath()];
 
-                static::assertContains(
-                    $this->app->databasePath("migrations/$filename"),
-                    ServiceProvider::$publishGroups[$tag],
-                    "The '$filename' is not publishable in the '$tag' tag.",
-                );
-            }
-        });
+            // Check the file is published to the database migrations path.
+            static::assertTrue(
+                Str::startsWith($migration, $this->app->databasePath('migrations/')),
+                "The '{$file->getFilename()}' is not published in the [database/migrations] path."
+            );
+
+            // Check the file uses migration naming convention.
+            static::assertMatchesRegularExpression(
+                '/^\d{4}_\d{2}_\d{2}_\d{6}_[a-z|_]+\.php$/',
+                Str::after($migration, $this->app->databasePath('migrations/')),
+                "The '{$file->getFilename()}' is not published using [YYYY_MM_DD_HHMMSS_NAME.php] naming convention."
+            );
+        }
     }
 
     /**
