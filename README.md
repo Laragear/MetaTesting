@@ -43,7 +43,7 @@ composer require --dev laragear/meta-testing
 The `InteractsWithServiceProvider` allows to quickly test if the Service Provider of your package has registered all the needed bits of code into the Service Container.
 
 ```php
-use Orchestra\Testbench\TestCase
+use Orchestra\Testbench\TestCase;
 use Laragear\MetaTesting\InteractsWithServiceProvider;
 
 class ServiceProviderTest extends TestCase
