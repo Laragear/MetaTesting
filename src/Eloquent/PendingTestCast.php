@@ -13,9 +13,6 @@ class PendingTestCast
 
     /**
      * Create a new Pending test for cast.
-     *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  string  $attribute
      */
     public function __construct(protected Model $model, protected string $attribute)
     {
@@ -25,7 +22,6 @@ class PendingTestCast
     /**
      * Sets the initial raw attributes for the underlying test model.
      *
-     * @param  array  $attributes
      * @return $this
      */
     public function withRawAttributes(array $attributes): static
@@ -38,8 +34,6 @@ class PendingTestCast
     /**
      * Assert that a cast receives a value and transforms it.
      *
-     * @param  mixed  $incoming
-     * @param  array  $expected
      * @return $this
      */
     public function assertCastTo(mixed $incoming, mixed $expected): static
@@ -64,8 +58,6 @@ class PendingTestCast
     /**
      * Assert that the given value get cast into a raw value.
      *
-     * @param  mixed  $incoming
-     * @param  mixed  $expected
      * @return $this
      */
     public function assertCastToRaw(mixed $incoming, mixed $expected): static

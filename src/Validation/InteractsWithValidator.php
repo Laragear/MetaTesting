@@ -13,9 +13,6 @@ trait InteractsWithValidator
      * Runs the validation name with data and rules
      *
      * @internal
-     * @param  array<string, mixed>|string  $data
-     * @param  array<string, array<string, string>|string>|string  $rules
-     * @return bool
      */
     protected function runValidation(array|string $data, array|string $rules): bool
     {
@@ -28,10 +25,6 @@ trait InteractsWithValidator
 
     /**
      * Assert a given rule passes.
-     *
-     * @param  array<string, mixed>|string  $data
-     * @param  array<string, array<string, string>|string>|string  $rules
-     * @return void
      */
     protected function assertValidationPasses(array|string $data, array|string $rules): void
     {
@@ -40,10 +33,6 @@ trait InteractsWithValidator
 
     /**
      * Assert a given rule fails.
-     *
-     * @param  array<string, mixed>|string  $data
-     * @param  array<string, array<string, string>|string>|string  $rules
-     * @return void
      */
     protected function assertValidationFails(array|string $data, array|string $rules): void
     {

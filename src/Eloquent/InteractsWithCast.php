@@ -8,10 +8,6 @@ trait InteractsWithCast
 {
     /**
      * Create a new cast test.
-     *
-     * @param  string  $cast
-     * @param  string  $attribute
-     * @return \Laragear\MetaTesting\Eloquent\PendingTestCast
      */
     public function cast(string $cast, string $attribute = 'test'): PendingTestCast
     {

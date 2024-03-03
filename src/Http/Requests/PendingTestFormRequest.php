@@ -11,7 +11,7 @@ use PHPUnit\Framework\Assert as PHPUnit;
 use function get_class;
 
 /**
- * @template TForm of FormRequest
+ * @template TForm of \Illuminate\Foundation\Http\FormRequest
  *
  * @internal
  */
@@ -19,9 +19,6 @@ class PendingTestFormRequest
 {
     /**
      * Create a new Pending Test.
-     *
-     * @param  \Orchestra\Testbench\TestCase  $testCase
-     * @param  \Illuminate\Foundation\Http\FormRequest|TForm  $formRequest
      */
     public function __construct(protected TestCase $testCase, protected FormRequest $formRequest)
     {
@@ -31,7 +28,7 @@ class PendingTestFormRequest
     /**
      * Returns the underlying Form Request instance.
      *
-     * @return \Illuminate\Foundation\Http\FormRequest&TForm
+     * @return TForm
      */
     public function getFormRequest(): FormRequest
     {
@@ -40,8 +37,6 @@ class PendingTestFormRequest
 
     /**
      * Resolve the form request using a PHPUnit callback assertion.
-     *
-     * @return void
      */
     protected function resolveValidation(): void
     {
@@ -55,8 +50,6 @@ class PendingTestFormRequest
     /**
      * Set the currently logged in user for the application.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  string|null  $guard
      * @return $this
      */
     public function actingAs(UserContract $user, string $guard = null): static
@@ -67,8 +60,6 @@ class PendingTestFormRequest
     /**
      * Set the currently logged in user for the application.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  string|null  $guard
      * @return $this
      */
     public function be(UserContract $user, string $guard = null): static
@@ -175,7 +166,6 @@ class PendingTestFormRequest
     /**
      * Checks the form data is equal to the keys issued.
      *
-     * @param  array  $data
      * @return $this
      */
     public function assertFormData(array $data): static

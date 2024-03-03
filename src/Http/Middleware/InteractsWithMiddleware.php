@@ -9,10 +9,6 @@ trait InteractsWithMiddleware
 {
     /**
      * Create a new pending test for a middleware.
-     *
-     * @param  string  $middleware
-     * @param  string  ...$parameters
-     * @return \Laragear\MetaTesting\Http\Middleware\PendingTestMiddleware
      */
     protected function middleware(string $middleware, string ...$parameters): PendingTestMiddleware
     {

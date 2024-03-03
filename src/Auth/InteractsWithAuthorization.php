@@ -12,10 +12,6 @@ trait InteractsWithAuthorization
 {
     /**
      * Assert that the authenticated user is authorized for a given ability.
-     *
-     * @param  iterable|string  $ability
-     * @param  mixed  $parameters
-     * @return void
      */
     public function assertCan(iterable|string $ability, mixed $parameters = []): void
     {
@@ -28,10 +24,6 @@ trait InteractsWithAuthorization
 
     /**
      * Assert that the authenticated user is not authorized for a given ability.
-     *
-     * @param  iterable|string  $ability
-     * @param  mixed  $parameters
-     * @return void
      */
     public function assertCannot(iterable|string $ability, mixed $parameters = []): void
     {
@@ -44,10 +36,6 @@ trait InteractsWithAuthorization
 
     /**
      * Assert that the authenticated user is not authorized for a given ability.
-     *
-     * @param  iterable|string  $ability
-     * @param  mixed  $parameters
-     * @return void
      */
     public function assertCant(iterable|string $ability, mixed $parameters = []): void
     {
@@ -56,11 +44,6 @@ trait InteractsWithAuthorization
 
     /**
      * Assert that the given user is authorized for a given ability.
-     *
-     * @param  mixed  $user
-     * @param  iterable|string  $ability
-     * @param  mixed  $parameters
-     * @return void
      */
     public function assertUserCan(mixed $user, iterable|string $ability, mixed $parameters = []): void
     {
@@ -73,11 +56,6 @@ trait InteractsWithAuthorization
 
     /**
      * Assert that the given user is not authorized for a given ability.
-     *
-     * @param  mixed  $user
-     * @param  iterable|string  $ability
-     * @param  mixed  $parameters
-     * @return void
      */
     public function assertUserCannot(mixed $user, iterable|string $ability, mixed $parameters = []): void
     {
@@ -90,11 +68,6 @@ trait InteractsWithAuthorization
 
     /**
      * Assert that the given user is not authorized for a given ability.
-     *
-     * @param  mixed  $user
-     * @param  iterable|string  $ability
-     * @param  mixed  $parameters
-     * @return void
      */
     public function assertUserCant(mixed $user, iterable|string $ability, mixed $parameters = []): void
     {

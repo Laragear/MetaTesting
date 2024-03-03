@@ -9,10 +9,11 @@ trait InteractsWithFormRequests
     /**
      * Assert a pending form request with data.
      *
-     * @param  class-string|string  $formRequest
+     * @template TForm of \Illuminate\Foundation\Http\FormRequest
+     * @param  class-string<TForm>  $formRequest
      * @param  array  $input
      * @param  array  $request
-     * @return \Laragear\Meta\Http\Requests\PendingTestFormRequest
+     * @return \Laragear\MetaTesting\Http\Requests\PendingTestFormRequest<TForm>
      */
     public function formRequest(string $formRequest, array $input, array $request = []): PendingTestFormRequest
     {

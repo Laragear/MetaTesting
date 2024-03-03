@@ -2,16 +2,19 @@
 
 namespace Tests;
 
+use Baz;
 use Closure;
+use Foo;
 use Illuminate\Auth\SessionGuard;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as BaseBuilder;
+use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Carbon;
@@ -30,6 +33,7 @@ use function is_callable;
 use function is_string;
 use function now;
 use function preg_replace;
+use function version_compare;
 
 class InteractsWithServiceProviderTest extends TestCase
 {
@@ -226,6 +230,10 @@ class InteractsWithServiceProviderTest extends TestCase
 
     public function test_assert_publishes_migration(): void
     {
+        if (version_compare(Application::VERSION, '11', '>=')) {
+            static::markTestSkipped('Developer should use [publishesMigrations] instead.');
+        }
+
         $foo = Mockery::mock(SplFileInfo::class);
         $foo->expects('getRealPath')->andReturn('/package/vendor/migrations/create_foo_table.php');
         $foo->expects('getFilename')->twice()->andReturn('create_foo_table.php');
@@ -241,7 +249,7 @@ class InteractsWithServiceProviderTest extends TestCase
 
             public function boot(): void
             {
-                $this->publishesMigrations('/package/vendor/migrations');
+                $this->publishMigrations('/package/vendor/migrations');
             }
         });
 
@@ -261,7 +269,7 @@ class InteractsWithServiceProviderTest extends TestCase
 
             public function boot(): void
             {
-                $this->publishesMigrations('/package/vendor/migrations', 'cougar');
+                $this->publishMigrations('/package/vendor/migrations', 'cougar');
             }
         });
 
@@ -282,7 +290,7 @@ class InteractsWithServiceProviderTest extends TestCase
 
             public function boot(): void
             {
-                $this->publishesMigrations('/package/vendor/migrations');
+                $this->publishMigrations('/package/vendor/migrations');
             }
         });
 
@@ -301,7 +309,7 @@ class InteractsWithServiceProviderTest extends TestCase
 
             public function boot(): void
             {
-                $this->publishesMigrations('/package/vendor/migrations');
+                $this->publishMigrations('/package/vendor/migrations');
             }
         });
 
@@ -563,11 +571,11 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 Route::post('foo', 'Foo@bar')->name('exists');
-                Route::post('baz', [\Baz::class, 'quz'])->name('exists');
+                Route::post('baz', [Baz::class, 'quz'])->name('exists');
             }
         });
 
-        $this->assertRouteByAction([\Foo::class, 'bar']);
+        $this->assertRouteByAction([Foo::class, 'bar']);
         $this->assertRouteByAction('Baz@quz');
     }
 
@@ -577,7 +585,7 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 Route::post('foo', 'Foo@bar')->name('exists');
-                Route::post('baz', [\Baz::class, 'quz'])->name('exists');
+                Route::post('baz', [Baz::class, 'quz'])->name('exists');
             }
         });
 
@@ -593,7 +601,7 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 Route::post('foo', 'Foo@bar')->name('exists');
-                Route::post('baz', [\Baz::class, 'quz'])->name('exists');
+                Route::post('baz', [Baz::class, 'quz'])->name('exists');
             }
         });
 
@@ -797,13 +805,13 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 $this->withSchedule(static function (Schedule $schedule): void {
-                    $schedule->job(\Tests\Job::class)->sundays()->at('09:00');
+                    $schedule->job(Job::class)->sundays()->at('09:00');
                     $schedule->command('test:job')->sundays()->at('09:00');
                 });
             }
         });
 
-        $this->assertHasScheduledTask(\Tests\Job::class);
+        $this->assertHasScheduledTask(Job::class);
         $this->assertHasScheduledTask('test:job');
     }
 
@@ -815,7 +823,7 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 $this->withSchedule(static function (Schedule $schedule): void {
-                    $schedule->job(\Tests\Job::class)->sundays()->at('09:00');
+                    $schedule->job(Job::class)->sundays()->at('09:00');
                     $schedule->command('test:job')->sundays()->at('09:00');
                 });
             }
@@ -824,7 +832,7 @@ class InteractsWithServiceProviderTest extends TestCase
         $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessage("The 'Tests\Invalid' is has not been scheduled");
 
-        $this->assertHasScheduledTask(\Tests\Invalid::class);
+        $this->assertHasScheduledTask(Invalid::class);
     }
 
     public function test_assert_scheduled_command_fails_if_not_found(): void
@@ -835,7 +843,7 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 $this->withSchedule(static function (Schedule $schedule): void {
-                    $schedule->job(\Tests\Job::class)->sundays()->at('09:00');
+                    $schedule->job(Job::class)->sundays()->at('09:00');
                     $schedule->command('test:job')->sundays()->at('09:00');
                 });
             }
@@ -855,13 +863,13 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 $this->withSchedule(static function (Schedule $schedule): void {
-                    $schedule->job(\Tests\Job::class)->sundays()->at('09:00');
+                    $schedule->job(Job::class)->sundays()->at('09:00');
                     $schedule->command('test:job')->sundays()->at('09:00');
                 });
             }
         });
 
-        $this->assertScheduledTaskRunsAt(\Tests\Job::class, Carbon::now()->weekday(Carbon::SUNDAY)->setTime(9, 0));
+        $this->assertScheduledTaskRunsAt(Job::class, Carbon::now()->weekday(Carbon::SUNDAY)->setTime(9, 0));
         $this->assertScheduledTaskRunsAt('test:job', Carbon::now()->weekday(Carbon::SUNDAY)->setTime(9, 0));
     }
 
@@ -873,7 +881,7 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 $this->withSchedule(static function (Schedule $schedule): void {
-                    $schedule->job(\Tests\Job::class)->sundays()->at('09:00');
+                    $schedule->job(Job::class)->sundays()->at('09:00');
                     $schedule->command('test:job')->sundays()->at('09:00');
                 });
             }
@@ -882,7 +890,7 @@ class InteractsWithServiceProviderTest extends TestCase
         $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessage("The 'Tests\Invalid' is has not been scheduled");
 
-        $this->assertScheduledTaskRunsAt(\Tests\Invalid::class, Carbon::now()->weekday(Carbon::SUNDAY)->setTime(9, 0));
+        $this->assertScheduledTaskRunsAt(Invalid::class, Carbon::now()->weekday(Carbon::SUNDAY)->setTime(9, 0));
     }
 
     public function test_assert_scheduled_command_at_date_fails_if_doesnt_exist(): void
@@ -893,7 +901,7 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 $this->withSchedule(static function (Schedule $schedule): void {
-                    $schedule->job(\Tests\Job::class)->sundays()->at('09:00');
+                    $schedule->job(Job::class)->sundays()->at('09:00');
                     $schedule->command('test:job')->sundays()->at('09:00');
                 });
             }
@@ -913,7 +921,7 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 $this->withSchedule(static function (Schedule $schedule): void {
-                    $schedule->job(\Tests\Job::class)->sundays()->at('09:00');
+                    $schedule->job(Job::class)->sundays()->at('09:00');
                     $schedule->command('test:job')->sundays()->at('09:00');
                 });
             }
@@ -922,7 +930,7 @@ class InteractsWithServiceProviderTest extends TestCase
         $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessage("The 'Tests\Job' is not scheduled to run at '2019-12-29 10:00:00'.");
 
-        $this->assertScheduledTaskRunsAt(\Tests\Job::class, Carbon::create(2019, 12, 29, 10));
+        $this->assertScheduledTaskRunsAt(Job::class, Carbon::create(2019, 12, 29, 10));
     }
 
     public function test_assert_scheduled_command_at_date_fails_if_doesnt_run_at_date(): void
@@ -933,7 +941,7 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 $this->withSchedule(static function (Schedule $schedule): void {
-                    $schedule->job(\Tests\Job::class)->sundays()->at('09:00');
+                    $schedule->job(Job::class)->sundays()->at('09:00');
                     $schedule->command('test:job')->sundays()->at('09:00');
                 });
             }
@@ -953,12 +961,12 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 $this->withSchedule(static function (Schedule $schedule): void {
-                    $schedule->job(\Tests\Job::class)->between('09:00', '10:00')->everyFifteenMinutes();
+                    $schedule->job(Job::class)->between('09:00', '10:00')->everyFifteenMinutes();
                 });
             }
         });
 
-        $this->assertScheduledTaskRunsAt(\Tests\Job::class, Carbon::create(2019, 12, 29, 9, 30));
+        $this->assertScheduledTaskRunsAt(Job::class, Carbon::create(2019, 12, 29, 9, 30));
     }
 
     public function test_assert_scheduled_task_at_date_between_fails_if_time_not_between(): void
@@ -969,7 +977,7 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 $this->withSchedule(static function (Schedule $schedule): void {
-                    $schedule->job(\Tests\Job::class)->between('09:00', '10:00')->everyFifteenMinutes();
+                    $schedule->job(Job::class)->between('09:00', '10:00')->everyFifteenMinutes();
                 });
             }
         });
@@ -977,7 +985,7 @@ class InteractsWithServiceProviderTest extends TestCase
         $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessage("The 'Tests\Job' is not scheduled to run at '2019-12-29 09:20:00'.");
 
-        $this->assertScheduledTaskRunsAt(\Tests\Job::class, Carbon::create(2019, 12, 29, 9, 20));
+        $this->assertScheduledTaskRunsAt(Job::class, Carbon::create(2019, 12, 29, 9, 20));
     }
 
     public function test_assert_macro(): void
@@ -1049,7 +1057,7 @@ trait BootHelpers
     ): void {
         $this->callAfterResolving(
             'validator',
-            static function (Factory $validator, Application $app) use ($message, $callback, $implicit, $rule): void {
+            static function (Factory $validator, ApplicationContract $app) use ($message, $callback, $implicit, $rule): void {
                 $message = is_callable($message) ? $message($validator, $app) : $message;
 
                 $implicit
@@ -1157,7 +1165,7 @@ class MiddlewareDeclaration
  */
 trait PublishesMigrations
 {
-    protected function publishesMigrations(array|string $paths, string $groups = 'migrations'): void
+    protected function publishMigrations(array|string $paths, string $groups = 'migrations'): void
     {
         $prefix = now()->format('Y_m_d_His');
 

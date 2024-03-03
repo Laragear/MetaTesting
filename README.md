@@ -4,7 +4,7 @@
 [![Codecov coverage](https://codecov.io/gh/Laragear/MetaTesting/branch/1.x/graph/badge.svg?token=bogXap7Rjn)](https://codecov.io/gh/Laragear/MetaTesting)
 [![Maintainability](https://api.codeclimate.com/v1/badges/70970a4557ebd90484fd/maintainability)](https://codeclimate.com/github/Laragear/MetaTesting/maintainability)
 [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=Laragear_MetaTesting&metric=alert_status)](https://sonarcloud.io/dashboard?id=Laragear_MetaTesting)
-[![Laravel Octane Compatibility](https://img.shields.io/badge/Laravel%20Octane-Compatible-success?style=flat&logo=laravel)](https://laravel.com/docs/9.x/octane#introduction)
+[![Laravel Octane Compatibility](https://img.shields.io/badge/Laravel%20Octane-Compatible-success?style=flat&logo=laravel)](https://laravel.com/docs/11.x/octane#introduction)
 
 A Laravel Package for testing Laravel Packages.
 
@@ -23,8 +23,8 @@ Your support allows me to keep this package free, up-to-date and maintainable. A
 
 ## Requirements
 
-* PHP 8 or later.
-* Laravel 9, 10 or later.
+* PHP 8.1 or later.
+* Laravel 10.x or later.
 
 ## Installation
 
@@ -71,7 +71,7 @@ The available assertions are in this table:
 
 ### Service Helpers
 
-The `InteractsWithServices` trait includes helpers to retrieve services from the Service Container and do quick things like checks or preparation. 
+The `InteractsWithServices` trait includes helpers to retrieve services from the Service Container and do quick things like checks or preparation.
 
 ```php
 public function test_something_important(): void
@@ -187,4 +187,4 @@ If you discover any security related issues, please email darkghosthunter@gmail.
 
 This specific package version is licensed under the terms of the [MIT License](LICENSE.md), at time of publishing.
 
-[Laravel](https://laravel.com) is a Trademark of [Taylor Otwell](https://github.com/TaylorOtwell/). Copyright © 2011-2023 Laravel LLC.
+[Laravel](https://laravel.com) is a Trademark of [Taylor Otwell](https://github.com/TaylorOtwell/). Copyright © 2011-2024 Laravel LLC.

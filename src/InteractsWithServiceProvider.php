@@ -33,11 +33,6 @@ trait InteractsWithServiceProvider
 {
     /**
      * Assert that a service manager contains a given driver.
-     *
-     * @param  string  $service
-     * @param  string  $driver
-     * @param  class-string|string|null  $class
-     * @return void
      */
     protected function assertHasDriver(string $service, string $driver, string $class = null): void
     {
@@ -58,9 +53,6 @@ trait InteractsWithServiceProvider
 
     /**
      * Assert the services are registered in the Service Container.
-     *
-     * @param  string  ...$services
-     * @return void
      */
     protected function assertHasServices(string ...$services): void
     {
@@ -75,9 +67,6 @@ trait InteractsWithServiceProvider
 
     /**
      * Assert a service is registered as a shared instance.
-     *
-     * @param  string  ...$services
-     * @return void
      */
     protected function assertHasSingletons(string ...$services): void
     {
@@ -94,9 +83,6 @@ trait InteractsWithServiceProvider
 
     /**
      * Assert a service is registered as a shared instance.
-     *
-     * @param  string  ...$services
-     * @return void
      */
     protected function assertHasShared(string ...$services): void
     {
@@ -105,10 +91,6 @@ trait InteractsWithServiceProvider
 
     /**
      * Assert that the config file is merged into the application using the given key.
-     *
-     * @param  string  $file
-     * @param  string|null  $configKey
-     * @return void
      */
     protected function assertConfigMerged(string $file, string $configKey = null): void
     {
@@ -129,10 +111,6 @@ trait InteractsWithServiceProvider
 
     /**
      * Asserts that the given files are set to be published.
-     *
-     * @param  string  $file
-     * @param  string  $tag
-     * @return void
      */
     protected function assertPublishes(string $file, string $tag): void
     {
@@ -148,9 +126,7 @@ trait InteractsWithServiceProvider
     /**
      * Assert that the migration files in the given path are published.
      *
-     * @param  string  $dir
-     * @param  string  $tag
-     * @return void
+     * @deprecated Use "assertPublishes" instead.
      */
     protected function assertPublishesMigrations(string $dir, string $tag = 'migrations'): void
     {
@@ -177,10 +153,6 @@ trait InteractsWithServiceProvider
 
     /**
      * Assert the translation namespace is registered.
-     *
-     * @param  string  $path
-     * @param  string  $namespace
-     * @return void
      */
     protected function assertHasTranslations(string $path, string $namespace): void
     {
@@ -196,10 +168,6 @@ trait InteractsWithServiceProvider
 
     /**
      * Assert the view namespace is registered.
-     *
-     * @param  string  $path
-     * @param  string  $namespace
-     * @return void
      */
     protected function assertHasViews(string $path, string $namespace): void
     {
@@ -224,10 +192,6 @@ trait InteractsWithServiceProvider
 
     /**
      * Assert the blade components are registered.
-     *
-     * @param  string  $alias
-     * @param  string  $component
-     * @return void
      */
     protected function assertHasBladeComponent(string $alias, string $component): void
     {
@@ -239,9 +203,6 @@ trait InteractsWithServiceProvider
 
     /**
      * Assert the blade directives are registered.
-     *
-     * @param  string  ...$directives
-     * @return void
      */
     protected function assertHasBladeDirectives(string ...$directives): void
     {
@@ -254,9 +215,6 @@ trait InteractsWithServiceProvider
 
     /**
      * Assert the validation rules are registered.
-     *
-     * @param  string  ...$rules
-     * @return void
      */
     protected function assertHasValidationRules(string ...$rules): void
     {
@@ -269,9 +227,6 @@ trait InteractsWithServiceProvider
 
     /**
      * Assert a route exists for the given name.
-     *
-     * @param  string  $name
-     * @return \Illuminate\Routing\Route
      */
     protected function assertRouteByName(string $name): Route
     {
@@ -284,10 +239,6 @@ trait InteractsWithServiceProvider
 
     /**
      * Assert a route exists for the given URI and HTTP verb.
-     *
-     * @param  string  $uri
-     * @param  string  $verb
-     * @return \Illuminate\Routing\Route
      */
     protected function assertRouteByUri(string $uri, string $verb = 'GET'): Route
     {
@@ -308,7 +259,6 @@ trait InteractsWithServiceProvider
      * Assert a route exists for the given action.
      *
      * @param  string|string[]|array{class-string,string}  $action
-     * @return \Illuminate\Routing\Route
      */
     protected function assertRouteByAction(string|array $action): Route
     {
@@ -329,10 +279,6 @@ trait InteractsWithServiceProvider
 
     /**
      * Assert the middleware are aliased.
-     *
-     * @param  string  $alias
-     * @param  string  $middleware
-     * @return void
      */
     protected function assertHasMiddlewareAlias(string $alias, string $middleware): void
     {
@@ -345,9 +291,6 @@ trait InteractsWithServiceProvider
 
     /**
      * Assert the middleware is registered globally.
-     *
-     * @param  string  ...$middleware
-     * @return void
      */
     protected function assertHasGlobalMiddleware(string ...$middleware): void
     {
@@ -364,10 +307,6 @@ trait InteractsWithServiceProvider
 
     /**
      * Assert the middleware is registered in a middleware group.
-     *
-     * @param  string  $group
-     * @param  string  $middleware
-     * @return void
      */
     protected function assertHasMiddlewareInGroup(string $group, string $middleware): void
     {
@@ -386,9 +325,6 @@ trait InteractsWithServiceProvider
 
     /**
      * Assert the gate has a given ability.
-     *
-     * @param  string  ...$abilities
-     * @return void
      */
     protected function assertGateHasAbility(string ...$abilities): void
     {
@@ -401,10 +337,6 @@ trait InteractsWithServiceProvider
 
     /**
      * Assert that a model has registered a Policy.
-     *
-     * @param  string  $model
-     * @param  string  ...$abilities
-     * @return void
      */
     protected function assertGateHasPolicy(string $model, string ...$abilities): void
     {
@@ -431,9 +363,6 @@ trait InteractsWithServiceProvider
 
     /**
      * Asserts a task is scheduled.
-     *
-     * @param  string  $task
-     * @return void
      */
     protected function assertHasScheduledTask(string $task): void
     {
@@ -448,10 +377,6 @@ trait InteractsWithServiceProvider
 
     /**
      * Assert that a scheduled task will run at the given date.
-     *
-     * @param  string  $task
-     * @param  \DateTimeInterface  $date
-     * @return void
      */
     protected function assertScheduledTaskRunsAt(string $task, DateTimeInterface $date): void
     {
@@ -471,9 +396,7 @@ trait InteractsWithServiceProvider
     /**
      * Assert the given class has registered the given macros.
      *
-     * @param  string|class-string  $macroable
-     * @param  string  ...$macros
-     * @return void
+     * @param  class-string  $macroable
      */
     protected function assertHasMacro(string $macroable, string ...$macros): void
     {

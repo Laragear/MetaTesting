@@ -14,10 +14,6 @@ trait InteractsWithServices
 {
     /**
      * Returns a service instance.
-     *
-     * @param  string  $service
-     * @param  \Closure|null  $callback
-     * @return mixed
      */
     protected function service(string $service, Closure $callback = null): mixed
     {
@@ -32,10 +28,6 @@ trait InteractsWithServices
 
     /**
      * Invokes a service, runs a callback, and forgets the instance.
-     *
-     * @param  string  $service
-     * @param  \Closure  $callback
-     * @return mixed
      */
     protected function serviceOnce(string $service, Closure $callback): mixed
     {
@@ -46,10 +38,6 @@ trait InteractsWithServices
 
     /**
      * Runs a callback over a real service while mocked.
-     *
-     * @param  string  $service
-     * @param  \Closure  $callback
-     * @return void
      */
     protected function unmock(string $service, Closure $callback): void
     {

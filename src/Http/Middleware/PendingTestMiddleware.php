@@ -50,11 +50,6 @@ class PendingTestMiddleware
 
     /**
      * Create a new Pending Test Middleware.
-     *
-     * @param  \Orchestra\Testbench\TestCase  $testCase
-     * @param  \Illuminate\Routing\Router  $router
-     * @param  string  $middleware
-     * @param  \Closure  $controller
      */
     public function __construct(
         protected TestCase $testCase,
@@ -68,7 +63,6 @@ class PendingTestMiddleware
     /**
      * Use a callback as a controller for the auto-generated route.
      *
-     * @param  callable  $callback
      * @return $this
      */
     public function using(callable $callback): static
@@ -93,7 +87,6 @@ class PendingTestMiddleware
     /**
      * Adds additional middleware to the auto-generated route.
      *
-     * @param  string  ...$middleware
      * @return $this
      */
     public function withRouteMiddleware(string ...$middleware): static
@@ -105,12 +98,8 @@ class PendingTestMiddleware
 
     /**
      * Handle dynamic calls to the Test Case.
-     *
-     * @param  string  $name
-     * @param  array  $arguments
-     * @return mixed
      */
-    public function __call(string $name, array $arguments)
+    public function __call(string $name, array $arguments): mixed
     {
         if (in_array($name, static::PASS_THROUGH, true)) {
             $route = $name === 'call' || $name === 'json'
