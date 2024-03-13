@@ -5,6 +5,7 @@ namespace Laragear\MetaTesting\Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Traits\ForwardsCalls;
 use PHPUnit\Framework\Assert as PHPUnit;
+
 use function is_array;
 
 class PendingTestCast

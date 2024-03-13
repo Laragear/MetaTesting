@@ -18,6 +18,7 @@ use InvalidArgumentException;
 use ReflectionException;
 use ReflectionMethod;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 use function implode;
 use function is_array;
 use function now;
@@ -354,7 +355,7 @@ trait InteractsWithServiceProvider
             }
 
             static::assertThat(
-                $method->isPublic() && !$method->isStatic(),
+                $method->isPublic() && ! $method->isStatic(),
                 static::isTrue(),
                 "The '$ability' ability declared in '$target' is private/protected or static.",
             );
