@@ -5,6 +5,7 @@ namespace Laragear\MetaTesting;
 use Closure;
 use LogicException;
 use Mockery\MockInterface;
+
 use function tap;
 
 /**

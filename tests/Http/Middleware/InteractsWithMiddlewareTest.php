@@ -66,7 +66,7 @@ class InteractsWithMiddlewareTest extends TestCase
     public function test_uses_controller(): void
     {
         $this->middleware(TestMiddleware::class)
-            ->using(fn() => 'foo')
+            ->using(fn () => 'foo')
             ->get('test')
             ->assertSee('foo');
     }
@@ -84,7 +84,6 @@ class InteractsWithMiddlewareTest extends TestCase
             ->assertSee('quz');
     }
 }
-
 
 class TestMiddleware
 {

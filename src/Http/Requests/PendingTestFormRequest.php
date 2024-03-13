@@ -8,6 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 use Orchestra\Testbench\TestCase;
 use PHPUnit\Framework\Assert as PHPUnit;
+
 use function get_class;
 
 /**

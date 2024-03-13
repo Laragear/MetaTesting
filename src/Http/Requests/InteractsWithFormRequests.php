@@ -10,6 +10,7 @@ trait InteractsWithFormRequests
      * Assert a pending form request with data.
      *
      * @template TForm of \Illuminate\Foundation\Http\FormRequest
+     *
      * @param  class-string<TForm>  $formRequest
      * @param  array  $input
      * @param  array  $request

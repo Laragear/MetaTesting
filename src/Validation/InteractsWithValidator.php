@@ -10,7 +10,7 @@ use function is_array;
 trait InteractsWithValidator
 {
     /**
-     * Runs the validation name with data and rules
+     * Runs the validation name with data and rules.
      *
      * @internal
      */

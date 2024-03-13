@@ -3,6 +3,7 @@
 namespace Laragear\MetaTesting\Http\Middleware;
 
 use Illuminate\Http\Response;
+
 use function implode;
 
 trait InteractsWithMiddleware

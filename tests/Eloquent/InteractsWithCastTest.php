@@ -6,6 +6,7 @@ use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Laragear\MetaTesting\Eloquent\InteractsWithCast;
 use Orchestra\Testbench\TestCase;
 use PHPUnit\Framework\AssertionFailedError;
+
 use function strtoupper;
 
 class InteractsWithCastTest extends TestCase
@@ -74,7 +75,6 @@ class InteractsWithCastTest extends TestCase
             ]);
     }
 }
-
 
 class TestCastsAttributes implements CastsAttributes
 {

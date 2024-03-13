@@ -164,4 +164,3 @@ class TestFormRequest extends FormRequest
         $this->request->set('baz', 'quz');
     }
 }
-
