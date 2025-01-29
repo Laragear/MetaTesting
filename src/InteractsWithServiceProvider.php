@@ -35,7 +35,7 @@ trait InteractsWithServiceProvider
     /**
      * Assert that a service manager contains a given driver.
      */
-    protected function assertHasDriver(string $service, string $driver, string $class = null): void
+    protected function assertHasDriver(string $service, ?string $driver, ?string $class = null): void
     {
         $manager = $this->app->make($service);
 
@@ -93,7 +93,7 @@ trait InteractsWithServiceProvider
     /**
      * Assert that the config file is merged into the application using the given key.
      */
-    protected function assertConfigMerged(string $file, string $configKey = null): void
+    protected function assertConfigMerged(string $file, ?string $configKey = null): void
     {
         $configKey ??= Str::of($file)->beforeLast('.php')->afterLast('/')->afterLast('\\')->toString();
 

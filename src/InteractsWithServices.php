@@ -16,7 +16,7 @@ trait InteractsWithServices
     /**
      * Returns a service instance.
      */
-    protected function service(string $service, Closure $callback = null): mixed
+    protected function service(string $service, ?Closure $callback = null): mixed
     {
         $instance = $this->app->make($service);
 
