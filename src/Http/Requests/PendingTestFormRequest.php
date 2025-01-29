@@ -53,7 +53,7 @@ class PendingTestFormRequest
      *
      * @return $this
      */
-    public function actingAs(UserContract $user, string $guard = null): static
+    public function actingAs(UserContract $user, ?string $guard = null): static
     {
         return $this->be($user, $guard);
     }
@@ -63,7 +63,7 @@ class PendingTestFormRequest
      *
      * @return $this
      */
-    public function be(UserContract $user, string $guard = null): static
+    public function be(UserContract $user, ?string $guard = null): static
     {
         $this->testCase->be($user, $guard);
 
