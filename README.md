@@ -19,12 +19,11 @@ public function test_has_service_registered(): void
 
 [![](.github/assets/support.png)](https://github.com/sponsors/DarkGhostHunter)
 
-Your support allows me to keep this package free, up-to-date and maintainable. Alternatively, you can **[spread the word!](http://twitter.com/share?text=I%20am%20using%20this%20cool%20PHP%20package&url=https://github.com%2FLaragear%2FMetaTesting&hashtags=PHP,Laravel)**
+Your support allows me to keep this package free, up-to-date and maintainable. Alternatively, you can **spread the word on social media**
 
 ## Requirements
 
-* PHP 8.1 or later.
-* Laravel 10.x or later.
+* Laravel 11 or later.
 
 ## Installation
 
@@ -34,7 +33,9 @@ Require this package into your project using Composer:
 composer require --dev laragear/meta-testing
 ```
 
-**DO NOT** install this package outside `require-dev`, unless you plan to use this package in production environments. 
+> [!DANGER]
+> 
+> **DO NOT** install this package outside `require-dev`, unless you plan to use this package in production environments. 
 
 ## Testing
 
@@ -187,4 +188,4 @@ If you discover any security related issues, please email darkghosthunter@gmail.
 
 This specific package version is licensed under the terms of the [MIT License](LICENSE.md), at time of publishing.
 
-[Laravel](https://laravel.com) is a Trademark of [Taylor Otwell](https://github.com/TaylorOtwell/). Copyright © 2011-2024 Laravel LLC.
+[Laravel](https://laravel.com) is a Trademark of [Taylor Otwell](https://github.com/TaylorOtwell/). Copyright © 2011-2025 Laravel LLC.
