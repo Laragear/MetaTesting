@@ -33,7 +33,7 @@ Require this package into your project using Composer:
 composer require --dev laragear/meta-testing
 ```
 
-> [!DANGER]
+> [!CAUTION]
 > 
 > **DO NOT** install this package outside `require-dev`, unless you plan to use this package in production environments. 
 
