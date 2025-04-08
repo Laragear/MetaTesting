@@ -191,6 +191,48 @@ public function test_cast()
 }
 ```
 
+### Pipeline
+
+The `InteractsWithPipeline` trait allows to test and ensure pipes on the pipelines work as expected, and in the order these are received.
+
+```php
+public function test_pipeline()
+{
+    // Check the order of pipes and the handler method.
+    $pipeline = $this->pipeline(MyPipeline::class)
+        ->assertPipeOrder([
+            FirstPipe::class,
+            SecondPipe::class,
+            ThirdPipe::class,
+        ])
+        ->assertVia('handle');
+
+    // Test the passable through all pipes and results are as expected.         
+    $pipeline->send(new Passable(['foo' => 'bar']))
+        ->send()
+        ->assertThat(function (Passable $passable) {
+            return $passable->value === 130;
+        })
+        
+    // Test a single pipe runs and assert data it outputs.
+    $pipeline->pipe(SecondClass::class)
+        ->withPassable(new Passable(['foo' => 'bar']))
+        ->send()
+        ->assertThat(function (Passable $passable) {
+            return $passable->value === 100;
+        }); 
+        
+    // Test a single pipe with a mocked services and passable values. 
+    $pipeline->pipe(FirstPipe::class)
+        ->withMockedServices(MyService::class, function ($mock) {
+            $mock->expects('sum')->with(0)->andReturn(10);
+        })
+        ->withMockedPassable(Passable::class, function ($mock) {
+            $mock->expects('set')->with(true)->andReturn(10);
+        })->send();
+}
+```
+
 ## Laravel Octane compatibility
 
 - There are no singletons using a stale application instance.
