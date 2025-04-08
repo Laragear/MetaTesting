@@ -1092,7 +1092,7 @@ class TestPolicy
  */
 trait BootHelpers
 {
-    protected function withDriver(string $service, string|array $driver, callable|string $callback = null): void
+    protected function withDriver(string $service, string|array $driver, callable|string|null $callback = null): void
     {
         if (is_string($driver)) {
             $driver = [$driver => $callback];
@@ -1108,7 +1108,7 @@ trait BootHelpers
     protected function withValidationRule(
         string $rule,
         callable|string $callback,
-        callable|string $message = null,
+        callable|string|null $message = null,
         bool $implicit = false
     ): void {
         $this->callAfterResolving(
@@ -1208,7 +1208,7 @@ class MiddlewareDeclaration
         $this->kernel->appendToMiddlewarePriority($this->middleware);
     }
 
-    public function shared(Closure $callback = null): static
+    public function shared(?Closure $callback = null): static
     {
         $this->kernel->getApplication()->singleton($this->middleware, $callback);
 
