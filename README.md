@@ -60,19 +60,37 @@ class ServiceProviderTest extends TestCase
 
 The available assertions are in this table:
 
-| Methods                       |                           |                               |
-|-------------------------------|---------------------------|-------------------------------|
-| `assertServices()`            | `assertBladeComponent()`  | `assertGlobalMiddleware()`    |
-| `assertSingletons()`          | `assertBladeDirectives()` | `assertMiddlewareInGroup()`   |
-| `assertConfigMerged()`        | `assertValidationRules()` | `assertGateHasPolicy()`       |
-| `assertPublishes()`           | `assertRouteByName()`     | `assertScheduledTask()`       |
-| `assertPublishesMigrations()` | `assertRouteByUri()`      | `assertScheduledTaskRunsAt()` |
-| `assertTranslations()`        | `assertRouteByAction()`   | `assertMacro()`               |
-| `assertViews()`               | `assertMiddlewareAlias()` |                               |
+| Method                         | Description                                                                              | 
+|--------------------------------|------------------------------------------------------------------------------------------|
+| `assertHasDriver()`            | Assert a service as registered given driver name                                         |
+| `assertHasServices()`          | Assert services have been registered into the Service Container                          |
+| `assertHasSingletons()`        | Assert services have been registered as a shared instance into the Service Container     |
+| `assertHasNotSingletons()`     | Assert services have been registered as a not-shared instance into the Service Container |
+| `assertConfigMerged()`         | Assert the library configuration file has been merged into the application.              |
+| `assertPublishes()`            | Assert the library publishes the paths into the application                              |
+| `assertPublishesMigrations()`  | Assert the library publishes the migrations into the application                         |
+| `assertHasTranslations()`      | Assert the library translations have been registered into the translator                 |
+| `assertHasViews()`             | Assert the library views have been registered into the view compiler                     |
+| `assertHasBladeComponent()`    | Assert the library Blade Components have been registered into the view compiler          |
+| `assertHasBladeDirectives()`   | Assert the library Blade Directives have been registered into the view compiler          |
+| `assertHasValidationRules()`   | Assert the library Validation Rules have been registered into the validator              |
+| `assertRouteByName()`          | Assert the library Routes names have been registered into the router                     |
+| `assertRouteByUri()`           | Assert the library Routes URIs have been registered into the router                      |
+| `assertRouteByAction()`        | Assert the library Routes actions have been registered into the router                   |
+| `assertHasMiddlewareAlias()`   | Assert the library Middleware alias has been registered into the router                  |
+| `assertHasGlobalMiddleware()`  | Assert the library Middleware have been registered globally into the router              |
+| `assertHasMiddlewareInGroup()` | Assert the library Middleware have been registered into a middleware group               |
+| `assertGateHasAbility()`       | Assert the library abilities have been registered into the authorization gate            |
+| `assertGateHasPolicy()`        | Assert the library policies have been registered into the authorization gate             |
+| `assertHasScheduledTask()`     | Assert the library scheduled tasks have been registered into the scheduler               |
+| `assertScheduledTaskRunsAt()`  | Assert the library scheduled tasks runs at a given moment                                |
+| `assertHasMacro()`             | Assert the library macros are registered into the target Macroable class                 |
 
 ### Service Helpers
 
 The `InteractsWithServices` trait includes helpers to retrieve services from the Service Container and do quick things like checks or preparation.
+
+
 
 ```php
 public function test_something_important(): void
@@ -92,9 +110,11 @@ public function test_something_important(): void
 
 ### Validation
 
-This meta package includes a `InteractsWithValidation` trait, that assert if a rule passes or fails using minimal data. This is useful when creating validation rules and testing them without too much boilerplate.
+This meta package includes a `InteractsWithValidator` trait, that assert if a rule passes or fails using minimal data. This is useful when creating validation rules and testing them without too much boilerplate.
 
 ```php
+use Laragear\MetaTesting\Validation\InteractsWithValidator;
+
 public function test_validation_rule(): void
 {
     // Assert the validation rule passes.
