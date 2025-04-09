@@ -193,43 +193,44 @@ public function test_cast()
 
 ### Pipeline
 
-The `InteractsWithPipeline` trait allows to test and ensure pipes on the pipelines work as expected, and in the order these are received.
+The `InteractsWithPipeline` trait allows to test and ensure pipes on the pipelines work as expected.
+
+You may use this to test pipelines as a whole, ensuring the pipe order never changes, or test pipes in isolation by mocking services it requires to work. Alternatively, you may also mock the _passable_ to test if some methods are called.
 
 ```php
 public function test_pipeline()
 {
-    // Check the order of pipes and the handler method.
     $pipeline = $this->pipeline(MyPipeline::class)
-        ->assertPipeOrder([
+        // Check the order of pipes
+        ->assertPipes([
             FirstPipe::class,
             SecondPipe::class,
             ThirdPipe::class,
         ])
+        // Check all pipes have their handler method.
         ->assertVia('handle');
 
-    // Test the passable through all pipes and results are as expected.         
-    $pipeline->send(new Passable(['foo' => 'bar']))
-        ->send()
-        ->assertThat(function (Passable $passable) {
+    // Test the passable through all pipes and assert its result.         
+    $pipeline->send(new Passable(['value' => 10]))
+        ->assertPassable(function (Passable $passable) {
             return $passable->value === 130;
         })
         
-    // Test a single pipe runs and assert data it outputs.
-    $pipeline->pipe(SecondClass::class)
-        ->withPassable(new Passable(['foo' => 'bar']))
-        ->send()
-        ->assertThat(function (Passable $passable) {
+    // Test a pipe in isolation and assert the results.
+    $pipeline->isolatePipe(SecondClass::class)
+        ->send(new Passable(['value' => 10]))
+        ->assertPassable(function (Passable $passable) {
             return $passable->value === 100;
-        }); 
+        });
         
-    // Test a single pipe with a mocked services and passable values. 
-    $pipeline->pipe(FirstPipe::class)
-        ->withMockedServices(MyService::class, function ($mock) {
+    // Mock services a pipe or pipeline requires, or mock the passable. 
+    $pipeline->isolatePipe(FirstPipe::class)
+        ->withMockedService(MyService::class, function ($mock) {
             $mock->expects('sum')->with(0)->andReturn(10);
         })
-        ->withMockedPassable(Passable::class, function ($mock) {
+        ->sendMock(Passable::class, function ($mock) {
             $mock->expects('set')->with(true)->andReturn(10);
-        })->send();
+        });
 }
 ```
 
