@@ -28,7 +28,7 @@ class PendingTestPassableTest extends TestCase
         $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessage('The passable is not what is expected.');
 
-        $pending->assertPassable(fn() => false);
+        $pending->assertPassable(fn () => false);
     }
 
     public function test_assert_passable_has(): void
@@ -156,7 +156,6 @@ class PendingTestPassableTest extends TestCase
         });
     }
 }
-
 
 class TestPendingPassable extends Fluent
 {

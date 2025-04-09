@@ -16,6 +16,7 @@ use PHPUnit\Framework\Constraint\LogicalNot;
 use PHPUnit\Framework\Constraint\TraversableContainsIdentical;
 use ReflectionClass;
 use ReflectionProperty;
+
 use function array_diff;
 use function array_map;
 use function array_values;
@@ -47,7 +48,7 @@ class PendingTestPipeline
         );
 
         foreach ($this->pipesWithoutParameters() as $pipe) {
-            if (!is_callable($pipe)) {
+            if (! is_callable($pipe)) {
                 PHPUnit::assertThat(
                     (new ReflectionClass($pipe))->hasMethod($method),
                     new IsTrue(),
@@ -128,7 +129,7 @@ class PendingTestPipeline
      */
     public function isolatePipe(string $pipe): static
     {
-        if (!in_array($pipe, $this->pipesWithoutParameters(), true)) {
+        if (! in_array($pipe, $this->pipesWithoutParameters(), true)) {
             PHPUnit::fail("The pipe [$pipe] is not set in the pipeline array.");
         }
 

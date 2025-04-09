@@ -10,6 +10,7 @@ use Laragear\MetaTesting\Pipeline\PendingTestPipeline;
 use Mockery\MockInterface;
 use PHPUnit\Framework\AssertionFailedError;
 use Tests\TestCase;
+
 use function is_object;
 use function property_exists;
 
@@ -207,7 +208,7 @@ class PendingTestPipelineTest extends TestCase
             TestingPipeSecond::class,
         ]));
 
-        $passable = (object)[
+        $passable = (object) [
             'foo' => 'bar',
         ];
 
@@ -281,7 +282,6 @@ class TestingPipeThird
 {
     public function via(): void
     {
-
     }
 }
 
@@ -289,7 +289,6 @@ class TestingPassable
 {
     public function __construct(public string $foo = 'bar')
     {
-
     }
 
     public function toQuz(): void

@@ -3,6 +3,7 @@
 namespace Laragear\MetaTesting\Pipeline;
 
 use Illuminate\Pipeline\Pipeline;
+
 use function is_string;
 
 trait InteractsWithPipelines

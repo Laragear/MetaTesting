@@ -9,6 +9,7 @@ use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\Constraint\IsIdentical;
 use PHPUnit\Framework\Constraint\IsTrue;
 use PHPUnit\Framework\Constraint\LogicalNot;
+
 use function data_get;
 use function func_num_args;
 
@@ -28,7 +29,7 @@ class PendingTestPassable
     }
 
     /**
-     * Assert the passable result is what is expected
+     * Assert the passable result is what is expected.
      *
      * @param  \Closure(TPassable, \Illuminate\Container\Container):bool  $callback
      * @return $this
