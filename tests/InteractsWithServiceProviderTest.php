@@ -843,14 +843,15 @@ class InteractsWithServiceProviderTest extends TestCase
     public function test_assert_command_has_fails_without_aliases()
     {
         $this->expectException(AssertionFailedError::class);
-        $this->expectExceptionMessage("No command aliases were provided.");
+        $this->expectExceptionMessage('No command aliases were provided.');
 
         $this->assertHasCommand();
     }
 
     public function test_assert_command_has(): void
     {
-        $this->app->register(new class($this->app) extends ServiceProvider {
+        $this->app->register(new class($this->app) extends ServiceProvider
+        {
             public function boot(): void
             {
                 $this->commands(TestCommand::class);
@@ -862,7 +863,8 @@ class InteractsWithServiceProviderTest extends TestCase
 
     public function test_assert_command_has_fails(): void
     {
-        $this->app->register(new class($this->app) extends ServiceProvider {
+        $this->app->register(new class($this->app) extends ServiceProvider
+        {
             public function boot(): void
             {
                 $this->commands(TestCommand::class);
@@ -885,7 +887,8 @@ class InteractsWithServiceProviderTest extends TestCase
 
     public function test_assert_command_has_parameter_with_option(): void
     {
-        $this->app->register(new class($this->app) extends ServiceProvider {
+        $this->app->register(new class($this->app) extends ServiceProvider
+        {
             public function boot(): void
             {
                 $this->commands(TestCommand::class);
@@ -897,7 +900,8 @@ class InteractsWithServiceProviderTest extends TestCase
 
     public function test_assert_command_has_parameter_with_option_fails(): void
     {
-        $this->app->register(new class($this->app) extends ServiceProvider {
+        $this->app->register(new class($this->app) extends ServiceProvider
+        {
             public function boot(): void
             {
                 $this->commands(TestCommand::class);
@@ -912,7 +916,8 @@ class InteractsWithServiceProviderTest extends TestCase
 
     public function test_assert_command_has_parameter_with_argument(): void
     {
-        $this->app->register(new class($this->app) extends ServiceProvider {
+        $this->app->register(new class($this->app) extends ServiceProvider
+        {
             public function boot(): void
             {
                 $this->commands(TestCommand::class);
@@ -924,7 +929,8 @@ class InteractsWithServiceProviderTest extends TestCase
 
     public function test_assert_command_has_parameter_with_argument_fails(): void
     {
-        $this->app->register(new class($this->app) extends ServiceProvider {
+        $this->app->register(new class($this->app) extends ServiceProvider
+        {
             public function boot(): void
             {
                 $this->commands(TestCommand::class);

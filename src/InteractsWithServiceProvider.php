@@ -25,7 +25,6 @@ use function is_array;
 use function now;
 use function preg_replace;
 use function realpath;
-use function str_starts_with;
 use function strtolower;
 use function strtoupper;
 
@@ -367,7 +366,7 @@ trait InteractsWithServiceProvider
     /**
      * Asserts a command is registered.
      */
-    protected function assertHasCommand(string ... $aliases): void
+    protected function assertHasCommand(string ...$aliases): void
     {
         if (empty($aliases)) {
             static::fail('No command aliases were provided.');
