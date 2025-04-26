@@ -7,6 +7,7 @@ use Illuminate\Auth\AuthManager;
 use Illuminate\Console\Scheduling\Event;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\Auth\Access\Gate;
+use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -24,6 +25,7 @@ use function is_array;
 use function now;
 use function preg_replace;
 use function realpath;
+use function str_starts_with;
 use function strtolower;
 use function strtoupper;
 
@@ -360,6 +362,49 @@ trait InteractsWithServiceProvider
                 "The '$ability' ability declared in '$target' is private/protected or static.",
             );
         }
+    }
+
+    /**
+     * Asserts a command is registered.
+     */
+    protected function assertHasCommand(string ... $aliases): void
+    {
+        if (empty($aliases)) {
+            static::fail('No command aliases were provided.');
+        }
+
+        $commands = $this->app->make(ConsoleKernel::class)->all();
+
+        foreach ($aliases as $alias) {
+            static::assertThat($commands, static::arrayHasKey($alias), "The '$alias' command is not registered.");
+        }
+    }
+
+    /**
+     * Asserts a command has the given options.
+     */
+    protected function assertHasCommandParameters(string $alias, string ...$parameters): void
+    {
+        if (empty($parameters)) {
+            static::fail('No command parameters were provided.');
+        }
+
+        /** @var \Illuminate\Console\Command $command */
+        $command = $this->app->make(ConsoleKernel::class)->all()[$alias];
+
+        foreach ($parameters as $parameter) {
+            static::assertThat(
+                Str::startsWith($parameter, '--')
+                    ? $command->getDefinition()->hasOption(Str::after($parameter, '--'))
+                    : $command->getDefinition()->hasArgument($parameter),
+                static::isTrue(),
+                Str::startsWith($parameter, '--')
+                    ? "The command '$alias' does not have the option '$parameter'."
+                    : "The command '$alias' does not have the argument '$parameter'.",
+            );
+        }
+
+        $command->setLaravel($this->app);
     }
 
     /**

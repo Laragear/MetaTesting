@@ -82,6 +82,8 @@ The available assertions are in this table:
 | `assertHasMiddlewareInGroup()` | Assert the library Middleware have been registered into a middleware group               |
 | `assertGateHasAbility()`       | Assert the library abilities have been registered into the authorization gate            |
 | `assertGateHasPolicy()`        | Assert the library policies have been registered into the authorization gate             |
+| `assertHasCommand()`           | Assert the library commands aliases have been registered into the application console    |
+| `assertHasCommandParameters()` | Assert the library command has the given options and/or arguments.                       |
 | `assertHasScheduledTask()`     | Assert the library scheduled tasks have been registered into the scheduler               |
 | `assertScheduledTaskRunsAt()`  | Assert the library scheduled tasks runs at a given moment                                |
 | `assertHasMacro()`             | Assert the library macros are registered into the target Macroable class                 |
