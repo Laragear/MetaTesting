@@ -7,3 +7,4 @@ parameters:
         - '#Trait Laragear\\MetaTesting\\InteractsWithServiceProvider is used zero times and is not analysed\.#'
         - '#Trait Laragear\\MetaTesting\\InteractsWithServices is used zero times and is not analysed\.#'
         - '#Trait Laragear\\MetaTesting\\Validation\\InteractsWithValidator is used zero times and is not analysed\.#'
+        - '#Trait Laragear\\MetaTesting\\Pipeline\\InteractsWithPipelines is used zero times and is not analysed\.#'
