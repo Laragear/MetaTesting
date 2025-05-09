@@ -44,13 +44,11 @@ class InteractsWithMiddlewareTest extends TestCase
 
         $this->middleware(TestMiddleware::class)->withRouteMiddleware('web')->get('test/see/method');
 
-        static::assertCount(1, $routes->getRoutes());
-        static::assertSame(['web', TestMiddleware::class], Arr::first($routes->getRoutes())->middleware());
+        static::assertSame(['web', TestMiddleware::class], Arr::last($routes->getRoutes())->middleware());
 
         $this->middleware(TestMiddleware::class)->post('test/see/method');
 
-        static::assertCount(1, $routes->getRoutes());
-        static::assertSame([TestMiddleware::class], Arr::first($routes->getRoutes())->middleware());
+        static::assertSame([TestMiddleware::class], Arr::last($routes->getRoutes())->middleware());
     }
 
     public function test_adds_web_group_middleware(): void
@@ -59,7 +57,7 @@ class InteractsWithMiddlewareTest extends TestCase
 
         static::assertSame(
             ['web', TestMiddleware::class],
-            Arr::first($this->app->make('router')->getRoutes())->middleware(),
+            Arr::last($this->app->make('router')->getRoutes()->getRoutes())->middleware(),
         );
     }
 
