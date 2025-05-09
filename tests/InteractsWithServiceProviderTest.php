@@ -2,10 +2,9 @@
 
 namespace Tests;
 
-use Baz;
 use Closure;
-use Foo;
 use Illuminate\Auth\SessionGuard;
+use Illuminate\Console\Command;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -601,11 +600,11 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 Route::post('foo', 'Foo@bar')->name('exists');
-                Route::post('baz', [Baz::class, 'quz'])->name('exists');
+                Route::post('baz', [\Baz::class, 'quz'])->name('exists');
             }
         });
 
-        $this->assertRouteByAction([Foo::class, 'bar']);
+        $this->assertRouteByAction([\Foo::class, 'bar']);
         $this->assertRouteByAction('Baz@quz');
     }
 
@@ -633,7 +632,7 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 Route::post('foo', 'Foo@bar')->name('exists');
-                Route::post('baz', [Baz::class, 'quz'])->name('exists');
+                Route::post('baz', [\Baz::class, 'quz'])->name('exists');
             }
         });
 
@@ -841,6 +840,109 @@ class InteractsWithServiceProviderTest extends TestCase
         $this->assertGateHasPolicy(User::class, 'invalid');
     }
 
+    public function test_assert_command_has_fails_without_aliases()
+    {
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('No command aliases were provided.');
+
+        $this->assertHasCommand();
+    }
+
+    public function test_assert_command_has(): void
+    {
+        $this->app->register(new class($this->app) extends ServiceProvider
+        {
+            public function boot(): void
+            {
+                $this->commands(TestCommand::class);
+            }
+        });
+
+        $this->assertHasCommand('test-command');
+    }
+
+    public function test_assert_command_has_fails(): void
+    {
+        $this->app->register(new class($this->app) extends ServiceProvider
+        {
+            public function boot(): void
+            {
+                $this->commands(TestCommand::class);
+            }
+        });
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage("The 'invalid-command' command is not registered.");
+
+        $this->assertHasCommand('invalid-command');
+    }
+
+    public function test_assert_command_has_parameter_fails_without_parameters(): void
+    {
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('No command parameters were provided.');
+
+        $this->assertHasCommandParameters('test-command');
+    }
+
+    public function test_assert_command_has_parameter_with_option(): void
+    {
+        $this->app->register(new class($this->app) extends ServiceProvider
+        {
+            public function boot(): void
+            {
+                $this->commands(TestCommand::class);
+            }
+        });
+
+        $this->assertHasCommandParameters('test-command', '--option');
+    }
+
+    public function test_assert_command_has_parameter_with_option_fails(): void
+    {
+        $this->app->register(new class($this->app) extends ServiceProvider
+        {
+            public function boot(): void
+            {
+                $this->commands(TestCommand::class);
+            }
+        });
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage("The command 'test-command' does not have the option '--invalid'.");
+
+        $this->assertHasCommandParameters('test-command', '--invalid');
+    }
+
+    public function test_assert_command_has_parameter_with_argument(): void
+    {
+        $this->app->register(new class($this->app) extends ServiceProvider
+        {
+            public function boot(): void
+            {
+                $this->commands(TestCommand::class);
+            }
+        });
+
+        $this->assertHasCommandParameters('test-command', 'argument');
+    }
+
+    public function test_assert_command_has_parameter_with_argument_fails(): void
+    {
+        $this->app->register(new class($this->app) extends ServiceProvider
+        {
+            public function boot(): void
+            {
+                $this->commands(TestCommand::class);
+            }
+        });
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage("The command 'test-command' does not have the argument 'invalid'.");
+
+        $this->assertHasCommandParameters('test-command', 'invalid');
+    }
+
     public function test_assert_scheduled(): void
     {
         $this->app->register(new class($this->app) extends ServiceProvider
@@ -869,16 +971,16 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 $this->withSchedule(static function (Schedule $schedule): void {
-                    $schedule->job(Job::class)->sundays()->at('09:00');
+                    $schedule->job(\Job::class)->sundays()->at('09:00');
                     $schedule->command('test:job')->sundays()->at('09:00');
                 });
             }
         });
 
         $this->expectException(AssertionFailedError::class);
-        $this->expectExceptionMessage("The 'Tests\Invalid' is has not been scheduled");
+        $this->expectExceptionMessage("The 'Invalid' is has not been scheduled");
 
-        $this->assertHasScheduledTask(Invalid::class);
+        $this->assertHasScheduledTask(\Invalid::class);
     }
 
     public function test_assert_scheduled_command_fails_if_not_found(): void
@@ -890,7 +992,7 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 $this->withSchedule(static function (Schedule $schedule): void {
-                    $schedule->job(Job::class)->sundays()->at('09:00');
+                    $schedule->job(\Job::class)->sundays()->at('09:00');
                     $schedule->command('test:job')->sundays()->at('09:00');
                 });
             }
@@ -911,13 +1013,13 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 $this->withSchedule(static function (Schedule $schedule): void {
-                    $schedule->job(Job::class)->sundays()->at('09:00');
+                    $schedule->job(\Job::class)->sundays()->at('09:00');
                     $schedule->command('test:job')->sundays()->at('09:00');
                 });
             }
         });
 
-        $this->assertScheduledTaskRunsAt(Job::class, Carbon::now()->weekday(Carbon::SUNDAY)->setTime(9, 0));
+        $this->assertScheduledTaskRunsAt(\Job::class, Carbon::now()->weekday(Carbon::SUNDAY)->setTime(9, 0));
         $this->assertScheduledTaskRunsAt('test:job', Carbon::now()->weekday(Carbon::SUNDAY)->setTime(9, 0));
     }
 
@@ -930,16 +1032,16 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 $this->withSchedule(static function (Schedule $schedule): void {
-                    $schedule->job(Job::class)->sundays()->at('09:00');
+                    $schedule->job(\Job::class)->sundays()->at('09:00');
                     $schedule->command('test:job')->sundays()->at('09:00');
                 });
             }
         });
 
         $this->expectException(AssertionFailedError::class);
-        $this->expectExceptionMessage("The 'Tests\Invalid' is has not been scheduled");
+        $this->expectExceptionMessage("The 'Invalid' is has not been scheduled");
 
-        $this->assertScheduledTaskRunsAt(Invalid::class, Carbon::now()->weekday(Carbon::SUNDAY)->setTime(9, 0));
+        $this->assertScheduledTaskRunsAt(\Invalid::class, Carbon::now()->weekday(Carbon::SUNDAY)->setTime(9, 0));
     }
 
     public function test_assert_scheduled_command_at_date_fails_if_doesnt_exist(): void
@@ -951,7 +1053,7 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 $this->withSchedule(static function (Schedule $schedule): void {
-                    $schedule->job(Job::class)->sundays()->at('09:00');
+                    $schedule->job(\Job::class)->sundays()->at('09:00');
                     $schedule->command('test:job')->sundays()->at('09:00');
                 });
             }
@@ -972,16 +1074,16 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 $this->withSchedule(static function (Schedule $schedule): void {
-                    $schedule->job(Job::class)->sundays()->at('09:00');
+                    $schedule->job(\Job::class)->sundays()->at('09:00');
                     $schedule->command('test:job')->sundays()->at('09:00');
                 });
             }
         });
 
         $this->expectException(AssertionFailedError::class);
-        $this->expectExceptionMessage("The 'Tests\Job' is not scheduled to run at '2019-12-29 10:00:00'.");
+        $this->expectExceptionMessage("The 'Job' is not scheduled to run at '2019-12-29 10:00:00'.");
 
-        $this->assertScheduledTaskRunsAt(Job::class, Carbon::create(2019, 12, 29, 10));
+        $this->assertScheduledTaskRunsAt(\Job::class, Carbon::create(2019, 12, 29, 10));
     }
 
     public function test_assert_scheduled_command_at_date_fails_if_doesnt_run_at_date(): void
@@ -993,7 +1095,7 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 $this->withSchedule(static function (Schedule $schedule): void {
-                    $schedule->job(Job::class)->sundays()->at('09:00');
+                    $schedule->job(\Job::class)->sundays()->at('09:00');
                     $schedule->command('test:job')->sundays()->at('09:00');
                 });
             }
@@ -1014,12 +1116,12 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 $this->withSchedule(static function (Schedule $schedule): void {
-                    $schedule->job(Job::class)->between('09:00', '10:00')->everyFifteenMinutes();
+                    $schedule->job(\Job::class)->between('09:00', '10:00')->everyFifteenMinutes();
                 });
             }
         });
 
-        $this->assertScheduledTaskRunsAt(Job::class, Carbon::create(2019, 12, 29, 9, 30));
+        $this->assertScheduledTaskRunsAt(\Job::class, Carbon::create(2019, 12, 29, 9, 30));
     }
 
     public function test_assert_scheduled_task_at_date_between_fails_if_time_not_between(): void
@@ -1031,15 +1133,15 @@ class InteractsWithServiceProviderTest extends TestCase
             public function boot(): void
             {
                 $this->withSchedule(static function (Schedule $schedule): void {
-                    $schedule->job(Job::class)->between('09:00', '10:00')->everyFifteenMinutes();
+                    $schedule->job(\Job::class)->between('09:00', '10:00')->everyFifteenMinutes();
                 });
             }
         });
 
         $this->expectException(AssertionFailedError::class);
-        $this->expectExceptionMessage("The 'Tests\Job' is not scheduled to run at '2019-12-29 09:20:00'.");
+        $this->expectExceptionMessage("The 'Job' is not scheduled to run at '2019-12-29 09:20:00'.");
 
-        $this->assertScheduledTaskRunsAt(Job::class, Carbon::create(2019, 12, 29, 9, 20));
+        $this->assertScheduledTaskRunsAt(\Job::class, Carbon::create(2019, 12, 29, 9, 20));
     }
 
     public function test_assert_macro(): void
@@ -1235,4 +1337,11 @@ trait PublishesMigrations
 
         $this->publishes($files, $groups);
     }
+}
+
+class TestCommand extends Command
+{
+    protected $signature = 'test-command
+                {argument : The argument description},
+                {--option : The option description}';
 }

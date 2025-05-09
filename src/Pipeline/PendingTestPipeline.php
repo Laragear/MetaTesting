@@ -154,10 +154,10 @@ class PendingTestPipeline
     /**
      * Mock services that would be required by the pipeline.
      *
-     * @template TService of class-string
+     * @template TService
      *
-     * @param  TService|string  $service
-     * @param  \Closure(TService, \Illuminate\Container\Container):void  $callback
+     * @param  class-string<TService>  $service
+     * @param  \Closure(TService&\Mockery\MockInterface, \Illuminate\Container\Container):void  $callback
      * @return $this
      */
     public function withMockedService(string $service, Closure $callback): static
@@ -185,10 +185,10 @@ class PendingTestPipeline
     /**
      * Mock the passable class that would be sent to each pipe.
      *
-     * @template TPassable of class-string
+     * @template TPassable
      *
-     * @param  TPassable  $passable
-     * @param  \Closure(TPassable, \Illuminate\Container\Container):void  $callback
+     * @param  class-string<TPassable>  $passable
+     * @param  \Closure(TPassable&\Mockery\MockInterface, \Illuminate\Container\Container):void  $callback
      * @return TPassable&\Mockery\MockInterface
      */
     public function sendMock(string $passable, Closure $callback): MockInterface
@@ -201,10 +201,10 @@ class PendingTestPipeline
     /**
      * Mock the passable class that would be sent to each pipe.
      *
-     * @template TPassable of class-string
+     * @template TPassable
      *
-     * @param  TPassable  $passable
-     * @param  \Closure(TPassable, \Illuminate\Container\Container):void  $callback
+     * @param  class-string<TPassable>  $passable
+     * @param  \Closure(TPassable&\Mockery\MockInterface, \Illuminate\Container\Container):void  $callback
      * @return TPassable&\Mockery\MockInterface
      */
     public function sendSpy(string $passable, Closure $callback): MockInterface
