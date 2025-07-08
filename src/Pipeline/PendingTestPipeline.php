@@ -15,6 +15,7 @@ use PHPUnit\Framework\Constraint\IsTrue;
 use PHPUnit\Framework\Constraint\LogicalNot;
 use PHPUnit\Framework\Constraint\TraversableContainsIdentical;
 use ReflectionClass;
+use ReflectionObject;
 use ReflectionProperty;
 
 use function array_diff;
@@ -105,7 +106,8 @@ class PendingTestPipeline
      */
     protected function pipes(): array
     {
-        return (new ReflectionProperty($this->pipeline, 'pipes'))->getValue($this->pipeline);
+        // Because the method is protected, we will use Reflection to call it.
+        return (new ReflectionObject($this->pipeline))->getMethod('pipes')->invoke($this->pipeline);
     }
 
     /**
