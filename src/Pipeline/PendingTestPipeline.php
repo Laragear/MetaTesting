@@ -103,6 +103,8 @@ class PendingTestPipeline
 
     /**
      * Return the pipes of the pipeline.
+     *
+     * @return array<int, \Closure|object|class-string>
      */
     protected function pipes(): array
     {
@@ -112,6 +114,8 @@ class PendingTestPipeline
 
     /**
      * Parse the pipes by removing the arguments from string-based pipes.
+     *
+     * @return array<int, \Closure|object|class-string>
      */
     protected function pipesWithoutParameters(): array
     {
