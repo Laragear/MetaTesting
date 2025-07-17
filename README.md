@@ -193,6 +193,55 @@ public function test_cast()
 }
 ```
 
+### Eloquent Builder
+
+> [!TIP]
+> 
+> The Eloquent Builder is only available for Laravel v11.15.0 and later.
+
+To mock the Eloquent Builder of a Model, you may use the `InteractsWithEloquentBuilder` trait and use the `mockQueryFor()` method to make expectations on the builder itself by just calling the methods to chain.
+
+To break the chain, you may use `and()` with the final method to call and the results you want to return through the `andReturn()` or `andReturnUsing()`.
+
+```php
+use App\Models\User;
+
+public function test_builder()
+{
+    $this->mockQueryFor(User::class)->whereKey(1)->and()->get()->shouldReturn(null);
+    
+    $result = User::query()->whereKey(1)->get();
+    
+    $this->assertNull($result);
+}
+```
+
+Alternatively, you may use a function to alter the Builder mock expectations directly.
+
+```php
+use App\Models\User;
+
+public function test_builder()
+{
+    $this->mockQueryFor(User::class, function ($mock) {
+        $mock->expects('whereKey', 1)->andReturnSelf();
+        $mock->expects('get')->andReturnNull();
+    });
+    
+    $result = User::query()->whereKey(1)->get();
+    
+    $this->assertNull($result);
+}
+```
+
+ou can also have access to the underlying Mock with the `mock()` method for manually set expectations to the Eloquent Builder.Y
+
+```php
+use App\Models\User;
+
+$this->query(User::class)->mock()->expects('lastPost')->andReturnNull();
+```
+
 ### Pipeline
 
 The `InteractsWithPipeline` trait allows to test and ensure pipes on the pipelines work as expected.
