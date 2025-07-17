@@ -19,9 +19,7 @@ use ReflectionClass;
 use ReflectionObject;
 use ReflectionProperty;
 
-use function array_diff;
 use function array_map;
-use function array_values;
 use function in_array;
 use function is_string;
 use function tap;
@@ -159,6 +157,7 @@ class PendingTestPipeline
                     foreach ($pipes as $key => $excludedPipe) {
                         if (Str::before($pipe, ':') === $excludedPipe) {
                             unset($pipes[$key]);
+
                             return true;
                         }
                     }
