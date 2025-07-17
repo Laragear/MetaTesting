@@ -5,6 +5,7 @@ namespace Laragear\MetaTesting\Pipeline;
 use Closure;
 use Illuminate\Container\Container;
 use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Mockery;
 use Mockery\MockInterface;
@@ -15,11 +16,10 @@ use PHPUnit\Framework\Constraint\IsTrue;
 use PHPUnit\Framework\Constraint\LogicalNot;
 use PHPUnit\Framework\Constraint\TraversableContainsIdentical;
 use ReflectionClass;
+use ReflectionObject;
 use ReflectionProperty;
 
-use function array_diff;
 use function array_map;
-use function array_values;
 use function in_array;
 use function is_string;
 use function tap;
@@ -102,14 +102,19 @@ class PendingTestPipeline
 
     /**
      * Return the pipes of the pipeline.
+     *
+     * @return array<int, \Closure|object|class-string>
      */
     protected function pipes(): array
     {
-        return (new ReflectionProperty($this->pipeline, 'pipes'))->getValue($this->pipeline);
+        // Because the method is protected, we will use Reflection to call it.
+        return (new ReflectionObject($this->pipeline))->getMethod('pipes')->invoke($this->pipeline);
     }
 
     /**
      * Parse the pipes by removing the arguments from string-based pipes.
+     *
+     * @return array<int, \Closure|object|class-string>
      */
     protected function pipesWithoutParameters(): array
     {
@@ -146,7 +151,21 @@ class PendingTestPipeline
      */
     public function removePipes(string ...$pipes): static
     {
-        $this->pipeline->through(array_values(array_diff($this->pipes(), $pipes)));
+        $this->pipeline->through(
+            Collection::make($this->pipes())->reject(static function (mixed $pipe) use (&$pipes): bool {
+                if (is_string($pipe)) {
+                    foreach ($pipes as $key => $excludedPipe) {
+                        if (Str::before($pipe, ':') === $excludedPipe) {
+                            unset($pipes[$key]);
+
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            })->values()->all()
+        );
 
         return $this;
     }

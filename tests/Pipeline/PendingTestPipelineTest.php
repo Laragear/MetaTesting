@@ -176,14 +176,15 @@ class PendingTestPipelineTest extends TestCase
     public function test_removes_pipes_doesnt_fail_if_pipe_doesnt_exist(): void
     {
         $pending = new PendingTestPipeline($this->app, new PendingTestPipelineTestInstance($this->app, [
+            $zero = fn () => true,
             TestingPipeFirst::class,
             TestingPipeSecond::class,
             TestingPipeThird::class,
         ]));
 
-        $pending->removePipes(TestingPipeThird::class, 'invalid');
+        $pending->removePipes(TestingPipeSecond::class, 'invalid');
 
-        $pending->assertPipes([TestingPipeFirst::class, TestingPipeSecond::class]);
+        $pending->assertPipes([$zero, TestingPipeFirst::class, TestingPipeThird::class]);
     }
 
     public function test_with_mocked_service(): void
