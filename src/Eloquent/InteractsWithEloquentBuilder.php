@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Mockery;
 use ReflectionObject;
+
 use function get_class;
 use function is_object;
 

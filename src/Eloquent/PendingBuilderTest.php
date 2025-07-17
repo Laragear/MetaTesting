@@ -20,8 +20,7 @@ class PendingBuilderTest
         protected MockInterface $mock,
         protected bool $continue = true,
         protected ExpectationInterface|Expectation|CompositeExpectation|null $last = null,
-    )
-    {
+    ) {
         //
     }
 
