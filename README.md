@@ -195,6 +195,10 @@ public function test_cast()
 
 ### Eloquent Builder
 
+> [!TIP]
+> 
+> The Eloquent Builder is only available for Laravel v11.15.0 and later.
+
 To mock the Eloquent Builder of a Model, you may use the `InteractsWithEloquentBuilder` trait and use the `mockQueryFor()` method to make expectations on the builder itself by just calling the methods to chain.
 
 To break the chain, you may use `and()` with the final method to call and the results you want to return through the `andReturn()` or `andReturnUsing()`.

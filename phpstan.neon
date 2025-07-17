@@ -2,6 +2,7 @@ parameters:
     ignoreErrors:
         - '#Trait Laragear\\MetaTesting\\Auth\\InteractsWithAuthorization is used zero times and is not analysed\.#'
         - '#Trait Laragear\\MetaTesting\\Eloquent\\InteractsWithCast is used zero times and is not analysed\.#'
+        - '#Trait Laragear\\MetaTesting\\Eloquent\\InteractsWithEloquentBuilder is used zero times and is not analysed\.#'
         - '#Trait Laragear\\MetaTesting\\Http\\Middleware\\InteractsWithMiddleware is used zero times and is not analysed\.#'
         - '#Trait Laragear\\MetaTesting\\Http\\Requests\\InteractsWithFormRequests is used zero times and is not analysed\.#'
         - '#Trait Laragear\\MetaTesting\\InteractsWithServiceProvider is used zero times and is not analysed\.#'

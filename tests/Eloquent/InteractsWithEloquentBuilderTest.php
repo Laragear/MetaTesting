@@ -3,6 +3,7 @@
 namespace Tests\Eloquent;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Collection;
 use Laragear\MetaTesting\Eloquent\InteractsWithEloquentBuilder;
@@ -13,6 +14,15 @@ use Tests\TestCase;
 class InteractsWithEloquentBuilderTest extends TestCase
 {
     use InteractsWithEloquentBuilder;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        if (! (new ReflectionClass(Model::class))->hasProperty('builder')) {
+            static::markTestSkipped('Cannot test Model custom builder as property is not set (v11.15.0).');
+        }
+    }
 
     public function test_query_with_builder_methods(): void
     {
