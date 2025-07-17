@@ -5,6 +5,7 @@ namespace Laragear\MetaTesting\Pipeline;
 use Closure;
 use Illuminate\Container\Container;
 use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Mockery;
 use Mockery\MockInterface;
@@ -152,7 +153,20 @@ class PendingTestPipeline
      */
     public function removePipes(string ...$pipes): static
     {
-        $this->pipeline->through(array_values(array_diff($this->pipes(), $pipes)));
+        $this->pipeline->through(
+            Collection::make($this->pipes())->reject(static function (mixed $pipe) use (&$pipes): bool {
+                if (is_string($pipe)) {
+                    foreach ($pipes as $key => $excludedPipe) {
+                        if (Str::before($pipe, ':') === $excludedPipe) {
+                            unset($pipes[$key]);
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            })->values()->all()
+        );
 
         return $this;
     }
