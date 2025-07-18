@@ -4,10 +4,9 @@ namespace Laragear\MetaTesting\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use Mockery\MockInterface;
-use ReflectionClass;
 use RuntimeException;
+
 use function get_class;
-use function is_object;
 
 /**
  * @mixin \Illuminate\Database\Eloquent\Builder
