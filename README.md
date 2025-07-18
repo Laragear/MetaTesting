@@ -216,30 +216,45 @@ public function test_builder()
 }
 ```
 
-Alternatively, you may use a function to alter the Builder mock expectations directly.
+Alternatively, you may use a function to alter the Builder mock expectations directly, or use the `mock()` helper.
 
 ```php
 use App\Models\User;
+use Mockery\MockInterface;
 
 public function test_builder()
 {
-    $this->mockQueryFor(User::class, function ($mock) {
-        $mock->expects('whereKey', 1)->andReturnSelf();
-        $mock->expects('get')->andReturnNull();
+    $this->mockQueryFor(User::class, function (MockInterface $mock) {
+        $mock->expects('find', 1)->andReturnNull();
     });
     
-    $result = User::query()->whereKey(1)->get();
-    
-    $this->assertNull($result);
+    $this->assertNull(User::find(1));
 }
 ```
 
-ou can also have access to the underlying Mock with the `mock()` method for manually set expectations to the Eloquent Builder.Y
+To restore the original Eloquent Builder, you can use `unmockQueryFor($model)` anywhere in your code. For example, it can be part of the last expectation so its restored after a given method call.
 
 ```php
 use App\Models\User;
+use Mockery\MockInterface;
+use Laragear\MetaTesting\Eloquent\PendingBuilderTestProxy;
 
-$this->query(User::class)->mock()->expects('lastPost')->andReturnNull();
+public function test_builder()
+{
+    // $mock = $this->mockQueryFor(User::class)->mock();
+
+    $this->mockQueryFor(User::class, function (MockInterface $mock) {
+        $mock->expects('find', 1)->andReturnUsing(function () {
+            $this->unmockQueryFor(User::class);
+            
+            return null;
+        });;
+    });
+    
+    $this->assertNull(User::find(1));
+    
+    $this->assertNotNull(User::find(1))
+}
 ```
 
 ### Pipeline
