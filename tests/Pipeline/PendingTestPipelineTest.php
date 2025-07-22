@@ -33,6 +33,7 @@ class PendingTestPipelineTest extends TestCase
 
         $mocked->send(null);
     }
+
     public function test_assert_via_with_default_handle_method(): void
     {
         $pending = new PendingTestPipeline($this->app, new PendingTestPipelineTestInstance($this->app, [
