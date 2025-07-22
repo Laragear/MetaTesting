@@ -20,6 +20,7 @@ use ReflectionObject;
 use ReflectionProperty;
 
 use function array_map;
+use function get_class;
 use function in_array;
 use function is_string;
 use function tap;
@@ -32,6 +33,16 @@ class PendingTestPipeline
     public function __construct(protected Container $container, protected Pipeline $pipeline)
     {
         //
+    }
+
+    /**
+     * Mock the pipeline inside the application container.
+     *
+     * @param  (\Closure(\Mockery\MockInterface):void)|null  $callback
+     */
+    public function mock(?Closure $callback = null): MockInterface
+    {
+        return $this->container->instance(get_class($this->pipeline), tap(Mockery::mock(Pipeline::class), $callback));
     }
 
     /**

@@ -16,6 +16,23 @@ use function property_exists;
 
 class PendingTestPipelineTest extends TestCase
 {
+    public function test_mock(): void
+    {
+        $pending = new PendingTestPipeline($this->app, new PendingTestPipelineTestInstance($this->app, [
+            TestingPipeFirst::class,
+            TestingPipeSecond::class,
+        ]));
+
+        $mocked = $pending->mock(static function (MockInterface $mock): void {
+            $mock->expects('send')->with(null)->andReturnSelf();
+        });
+
+        $service = $this->app->make(PendingTestPipelineTestInstance::class);
+
+        static::assertSame($mocked, $service);
+
+        $mocked->send(null);
+    }
     public function test_assert_via_with_default_handle_method(): void
     {
         $pending = new PendingTestPipeline($this->app, new PendingTestPipelineTestInstance($this->app, [
