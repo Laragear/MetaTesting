@@ -276,6 +276,11 @@ public function test_pipeline()
         // Check all pipes have their handler method.
         ->assertVia('handle');
 
+    // Mock the pipeline to be used elsewhere in your application
+    $pipeline->mock(function ($mock) {
+        $mock->expects('send')->andReturnSelf();
+    })
+
     // Test the passable through all pipes and assert its result.         
     $pipeline->send(new Passable(['value' => 10]))
         ->assertPassable(function (Passable $passable) {
