@@ -1,7 +1,7 @@
 # Meta Testing
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/laragear/meta-testing.svg)](https://packagist.org/packages/laragear/meta-testing)
 [![Latest stable test run](https://github.com/Laragear/MetaTesting/workflows/Tests/badge.svg)](https://github.com/Laragear/MetaTesting/actions)
-[![Codecov coverage](https://codecov.io/gh/Laragear/MetaTesting/branch/1.x/graph/badge.svg?token=bogXap7Rjn)](https://codecov.io/gh/Laragear/MetaTesting)
+[![Codecov coverage](https://codecov.io/gh/Laragear/MetaTesting/graph/badge.svg?token=bogXap7Rjn)](https://codecov.io/gh/Laragear/MetaTesting)
 [![Maintainability](https://qlty.sh/badges/2cf17cad-2946-4567-9eb3-be4b97d9f804/maintainability.svg)](https://qlty.sh/gh/Laragear/projects/MetaTesting)
 [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=Laragear_MetaTesting&metric=alert_status)](https://sonarcloud.io/dashboard?id=Laragear_MetaTesting)
 [![Laravel Octane Compatibility](https://img.shields.io/badge/Laravel%20Octane-Compatible-success?style=flat&logo=laravel)](https://laravel.com/docs/11.x/octane#introduction)
@@ -23,7 +23,8 @@ Your support allows me to keep this package free, up-to-date and maintainable. A
 
 ## Requirements
 
-* Laravel 11 or later.
+* PHP 8.3 or later
+* Laravel 12 or later.
 
 ## Installation
 

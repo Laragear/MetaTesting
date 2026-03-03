@@ -24,10 +24,10 @@
         "issues": "https://github.com/Laragear/MetaTesting/issues"
     },
     "require": {
-        "php": "^8.2"
+        "php": "^8.3"
     },
     "require-dev": {
-        "orchestra/testbench": "9.*|10.*"
+        "orchestra/testbench": "10.*|11.*"
     },
     "autoload": {
         "psr-4": {

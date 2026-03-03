@@ -23,7 +23,7 @@ class PendingBuilderTestProxy
     /**
      * The original builders of the registered models.
      *
-     * @var array<class-string<\Illuminate\Database\Eloquent\Model>, class-string<\Illuminate\Database\Eloquent\Builder>
+     * @var array<class-string<\Illuminate\Database\Eloquent\Model>, class-string<\Illuminate\Database\Eloquent\Builder>>
      */
     public static array $originalBuilders = [];
 
