@@ -161,7 +161,7 @@ class InteractsWithServiceProviderTest extends TestCase
 
     public function test_assert_has_listeners_with_closure(): void
     {
-        $this->app->make('events')->listen(fn(Login $event) => true);
+        $this->app->make('events')->listen(fn (Login $event) => true);
 
         $this->assertHasListeners(Login::class);
     }
