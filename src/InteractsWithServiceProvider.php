@@ -92,6 +92,25 @@ trait InteractsWithServiceProvider
     }
 
     /**
+     * Assert an event has registered certain listeners.
+     *
+     * @param  class-string  $event
+     * @param  class-string  ...$listeners
+     */
+    protected function assertHasListeners(string $event, string ...$listeners): void
+    {
+        $list = $this->app->make('events')->getRawListeners();
+
+        static::assertNotEmpty($list[$event] ?? null, "The is no listeners registered for the [$event] event.");
+
+        foreach ($listeners as $listener) {
+            static::assertContains(
+                $listener, $list[$event], "The [$listener] listener was not registered for [$event] event.",
+            );
+        }
+    }
+
+    /**
      * Assert that the config file is merged into the application using the given key.
      */
     protected function assertConfigMerged(string $file, ?string $configKey = null): void
