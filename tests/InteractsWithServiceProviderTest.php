@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Closure;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\SessionGuard;
 use Illuminate\Console\Command;
 use Illuminate\Console\Scheduling\Schedule;
@@ -148,6 +149,39 @@ class InteractsWithServiceProviderTest extends TestCase
         $this->expectExceptionMessage("The 'foo' was not registered in the Service Container.");
 
         $this->assertHasSingletons('foo');
+    }
+
+    public function test_assert_has_listeners(): void
+    {
+        $this->app->make('events')->listen('foo', 'foo-listener');
+
+        $this->assertHasListeners('foo');
+        $this->assertHasListeners('foo', 'foo-listener');
+    }
+
+    public function test_assert_has_listeners_with_closure(): void
+    {
+        $this->app->make('events')->listen(fn (Login $event) => true);
+
+        $this->assertHasListeners(Login::class);
+    }
+
+    public function test_assert_has_listeners_errors_with_no_listeners(): void
+    {
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('The is no listeners registered for the [Illuminate\Auth\Events\Login] event.');
+
+        $this->assertHasListeners(Login::class);
+    }
+
+    public function test_assert_has_listeners_errors_with_listener_not_listed(): void
+    {
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('The [invalid] listener was not registered for [Illuminate\Auth\Events\Login] event.');
+
+        $this->app->make('events')->listen(Login::class, 'foo-listener');
+
+        $this->assertHasListeners(Login::class, 'invalid');
     }
 
     public function test_assert_merged_config(): void
