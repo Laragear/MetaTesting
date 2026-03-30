@@ -151,6 +151,48 @@ class InteractsWithServiceProviderTest extends TestCase
         $this->assertHasSingletons('foo');
     }
 
+    public function test_assert_alias_registered(): void
+    {
+        $this->app->bind(Fluent::class);
+        $this->app->alias(Fluent::class, 'fluent');
+
+        $this->assertHasAlias(Fluent::class, 'fluent');
+    }
+
+    public function test_assert_alias_fails_if_not_registered(): void
+    {
+        $this->app->alias(Fluent::class, 'fluent');
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage("The 'Illuminate\Support\Fluent' was not registered in the Service Container.");
+
+        $this->assertHasAlias(Fluent::class, 'fluent');
+    }
+
+    public function test_assert_alias_fails_if_not_aliased(): void
+    {
+        $this->app->bind(Fluent::class);
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage("The 'fluent' alias is not registered to 'Illuminate\Support\Fluent' service.");
+
+        $this->assertHasAlias(Fluent::class, 'fluent');
+    }
+
+    public function test_assert_alias_fails_if_service_not_equal(): void
+    {
+        $this->app->bind(Fluent::class);
+        $this->app->alias(Fluent::class, 'fluent');
+
+        $this->app->bind('invalid-class');
+        $this->app->alias('invalid-class', 'invalid');
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage("The 'Illuminate\Support\Fluent' was not aliased as 'invalid'.");
+
+        $this->assertHasAlias(Fluent::class, 'invalid');
+    }
+
     public function test_assert_has_listeners(): void
     {
         $this->app->make('events')->listen('foo', 'foo-listener');

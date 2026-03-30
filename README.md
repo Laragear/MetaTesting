@@ -61,39 +61,38 @@ class ServiceProviderTest extends TestCase
 
 The available assertions are in this table:
 
-| Method                         | Description                                                                              | 
-|--------------------------------|------------------------------------------------------------------------------------------|
-| `assertHasDriver()`            | Assert a service as registered given driver name                                         |
-| `assertHasServices()`          | Assert services have been registered into the Service Container                          |
-| `assertHasSingletons()`        | Assert services have been registered as a shared instance into the Service Container     |
-| `assertHasNotSingletons()`     | Assert services have been registered as a not-shared instance into the Service Container |
-| `assertConfigMerged()`         | Assert the library configuration file has been merged into the application.              |
-| `assertPublishes()`            | Assert the library publishes the paths into the application                              |
-| `assertPublishesMigrations()`  | Assert the library publishes the migrations into the application                         |
-| `assertHasTranslations()`      | Assert the library translations have been registered into the translator                 |
-| `assertHasViews()`             | Assert the library views have been registered into the view compiler                     |
-| `assertHasBladeComponent()`    | Assert the library Blade Components have been registered into the view compiler          |
-| `assertHasBladeDirectives()`   | Assert the library Blade Directives have been registered into the view compiler          |
-| `assertHasValidationRules()`   | Assert the library Validation Rules have been registered into the validator              |
-| `assertRouteByName()`          | Assert the library Routes names have been registered into the router                     |
-| `assertRouteByUri()`           | Assert the library Routes URIs have been registered into the router                      |
-| `assertRouteByAction()`        | Assert the library Routes actions have been registered into the router                   |
-| `assertHasMiddlewareAlias()`   | Assert the library Middleware alias has been registered into the router                  |
-| `assertHasGlobalMiddleware()`  | Assert the library Middleware have been registered globally into the router              |
-| `assertHasMiddlewareInGroup()` | Assert the library Middleware have been registered into a middleware group               |
-| `assertGateHasAbility()`       | Assert the library abilities have been registered into the authorization gate            |
-| `assertGateHasPolicy()`        | Assert the library policies have been registered into the authorization gate             |
-| `assertHasCommand()`           | Assert the library commands aliases have been registered into the application console    |
-| `assertHasCommandParameters()` | Assert the library command has the given options and/or arguments.                       |
-| `assertHasScheduledTask()`     | Assert the library scheduled tasks have been registered into the scheduler               |
-| `assertScheduledTaskRunsAt()`  | Assert the library scheduled tasks runs at a given moment                                |
-| `assertHasMacro()`             | Assert the library macros are registered into the target Macroable class                 |
+| Method                         | Description                                                                           | 
+|--------------------------------|---------------------------------------------------------------------------------------|
+| `assertHasDriver()`            | Assert a service as registered given driver name                                      |
+| `assertHasServices()`          | Assert services have been registered into the Service Container                       |
+| `assertHasSingletons()`        | Assert services have been registered as a shared instance into the Service Container  |
+| `assertHasAlias()`             | Assert a service has been registered with the issued alias                            |
+| `assertConfigMerged()`         | Assert the library configuration file has been merged into the application.           |
+| `assertPublishes()`            | Assert the library publishes the paths into the application                           |
+| `assertPublishesMigrations()`  | Assert the library publishes the migrations into the application                      |
+| `assertHasTranslations()`      | Assert the library translations have been registered into the translator              |
+| `assertHasViews()`             | Assert the library views have been registered into the view compiler                  |
+| `assertHasBladeComponent()`    | Assert the library Blade Components have been registered into the view compiler       |
+| `assertHasBladeDirectives()`   | Assert the library Blade Directives have been registered into the view compiler       |
+| `assertHasValidationRules()`   | Assert the library Validation Rules have been registered into the validator           |
+| `assertRouteByName()`          | Assert the library Routes names have been registered into the router                  |
+| `assertRouteByUri()`           | Assert the library Routes URIs have been registered into the router                   |
+| `assertRouteByAction()`        | Assert the library Routes actions have been registered into the router                |
+| `assertHasMiddlewareAlias()`   | Assert the library Middleware alias has been registered into the router               |
+| `assertHasGlobalMiddleware()`  | Assert the library Middleware have been registered globally into the router           |
+| `assertHasMiddlewareInGroup()` | Assert the library Middleware have been registered into a middleware group            |
+| `assertGateHasAbility()`       | Assert the library abilities have been registered into the authorization gate         |
+| `assertGateHasPolicy()`        | Assert the library policies have been registered into the authorization gate          |
+| `assertHasCommand()`           | Assert the library commands aliases have been registered into the application console |
+| `assertHasCommandParameters()` | Assert the library command has the given options and/or arguments.                    |
+| `assertHasScheduledTask()`     | Assert the library scheduled tasks have been registered into the scheduler            |
+| `assertScheduledTaskRunsAt()`  | Assert the library scheduled tasks runs at a given moment                             |
+| `assertHasListeners()`         | Assert the library has registered listeners for the issued event                      |
+| `assertHasMacro()`             | Assert the library macros are registered into the target Macroable class              |
 
 ### Service Helpers
 
 The `InteractsWithServices` trait includes helpers to retrieve services from the Service Container and do quick things like checks or preparation.
-
-
 
 ```php
 public function test_something_important(): void
@@ -113,7 +112,7 @@ public function test_something_important(): void
 
 ### Validation
 
-This meta package includes a `InteractsWithValidator` trait, that assert if a rule passes or fails using minimal data. This is useful when creating validation rules and testing them without too much boilerplate.
+This meta-package includes a `InteractsWithValidator` trait, that assert if a rule passes or fails using minimal data. This is useful when creating validation rules and testing them without too much boilerplate.
 
 ```php
 use Laragear\MetaTesting\Validation\InteractsWithValidator;
@@ -130,7 +129,7 @@ public function test_validation_rule(): void
 
 ### Middleware
 
-You can test a middleware easily using the `InteractsWithMiddleware` trait and its `middleware()` method. It creates an on-demand route for the given path before sending a test Request to it, so there is no need to register a route.
+You can test any middleware easily using the `InteractsWithMiddleware` trait and its `middleware()` method. It creates an on-demand route for the given path before sending a test Request to it, so there is no need to register a route.
 
 ```php
 use Illuminate\Http\Request;
@@ -317,10 +316,10 @@ There should be no problems using this package with Laravel Octane.
 
 ## Security
 
-If you discover any security related issues, please email darkghosthunter@gmail.com instead of using the issue tracker.
+If you discover any security-related issues, issue a [Security Advisory](https://github.com/Laragear/Banpay/security/advisories/new).
 
 # License
 
-This specific package version is licensed under the terms of the [MIT License](LICENSE.md), at time of publishing.
+This specific package version is licensed under the terms of the [MIT License](LICENSE.md), at the time of publishing.
 
-[Laravel](https://laravel.com) is a Trademark of [Taylor Otwell](https://github.com/TaylorOtwell/). Copyright © 2011-2025 Laravel LLC.
+[Laravel](https://laravel.com) is a Trademark of [Taylor Otwell](https://github.com/TaylorOtwell/). Copyright © 2011-2026 Laravel LLC.

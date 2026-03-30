@@ -16,6 +16,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use PHPUnit\Framework\Constraint\IsIdentical;
 use ReflectionException;
 use ReflectionMethod;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -84,30 +85,27 @@ trait InteractsWithServiceProvider
     }
 
     /**
+     * Assert a service has registered an alias.
+     */
+    protected function assertHasAlias(string $service, string $alias):void
+    {
+        $this->assertHasServices($service);
+
+        static::assertThat(
+            $this->app->isAlias($alias), static::isTrue(), "The '$alias' alias is not registered to '$service' service."
+        );
+
+        static::assertThat(
+            $this->app->getAlias($alias), new IsIdentical($service), "The '$service' was not aliased as '$alias'."
+        );
+    }
+
+    /**
      * Assert a service is registered as a shared instance.
      */
     protected function assertHasShared(string ...$services): void
     {
         $this->assertHasSingletons(...$services);
-    }
-
-    /**
-     * Assert an event has registered certain listeners.
-     *
-     * @param  class-string  $event
-     * @param  class-string  ...$listeners
-     */
-    protected function assertHasListeners(string $event, string ...$listeners): void
-    {
-        $list = $this->app->make('events')->getRawListeners();
-
-        static::assertNotEmpty($list[$event] ?? null, "The is no listeners registered for the [$event] event.");
-
-        foreach ($listeners as $listener) {
-            static::assertContains(
-                $listener, $list[$event], "The [$listener] listener was not registered for [$event] event.",
-            );
-        }
     }
 
     /**
@@ -455,6 +453,25 @@ trait InteractsWithServiceProvider
         });
 
         static::assertThat($contains, static::isTrue(), "The '$task' is not scheduled to run at '$date'.");
+    }
+
+    /**
+     * Assert an event has registered certain listeners.
+     *
+     * @param  class-string  $event
+     * @param  class-string  ...$listeners
+     */
+    protected function assertHasListeners(string $event, string ...$listeners): void
+    {
+        $list = $this->app->make('events')->getRawListeners();
+
+        static::assertNotEmpty($list[$event] ?? null, "The is no listeners registered for the [$event] event.");
+
+        foreach ($listeners as $listener) {
+            static::assertContains(
+                $listener, $list[$event], "The [$listener] listener was not registered for [$event] event.",
+            );
+        }
     }
 
     /**
