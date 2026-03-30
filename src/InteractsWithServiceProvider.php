@@ -87,7 +87,7 @@ trait InteractsWithServiceProvider
     /**
      * Assert a service has registered an alias.
      */
-    protected function assertHasAlias(string $service, string $alias):void
+    protected function assertHasAlias(string $service, string $alias): void
     {
         $this->assertHasServices($service);
 
