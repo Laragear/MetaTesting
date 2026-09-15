@@ -57,10 +57,10 @@ class PendingBuilderTest
      */
     public function __call(string $name, array $arguments): ExpectationInterface|Expectation|CompositeExpectation|static
     {
-        $this->last = $this->mock->expects($name)->with(...$arguments); // @phpstan-ignore-line
+        $this->last = $this->mock->expects($name)->with(...$arguments);
 
         if ($this->continue) {
-            $this->last->andReturnSelf();  // @phpstan-ignore-line
+            $this->last->andReturnSelf();
 
             return $this;
         }
