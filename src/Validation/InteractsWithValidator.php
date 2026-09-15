@@ -5,9 +5,6 @@ namespace Laragear\MetaTesting\Validation;
 use function array_key_first;
 use function is_array;
 
-/**
- * @internal
- */
 trait InteractsWithValidator
 {
     /**

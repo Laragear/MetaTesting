@@ -5,9 +5,6 @@ namespace Laragear\MetaTesting\Auth;
 use Illuminate\Contracts\Auth\Access\Gate;
 use PHPUnit\Framework\Assert as PHPUnit;
 
-/**
- * @internal
- */
 trait InteractsWithAuthorization
 {
     /**

@@ -8,9 +8,6 @@ use Mockery\MockInterface;
 
 use function tap;
 
-/**
- * @internal
- */
 trait InteractsWithServices
 {
     /**
