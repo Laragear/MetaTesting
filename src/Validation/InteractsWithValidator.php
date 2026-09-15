@@ -4,9 +4,6 @@ namespace Laragear\MetaTesting\Validation;
 
 use function is_array;
 
-/**
- * @internal
- */
 trait InteractsWithValidator
 {
     /**

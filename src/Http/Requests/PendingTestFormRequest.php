@@ -5,6 +5,7 @@ namespace Laragear\MetaTesting\Http\Requests;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Auth\Authenticatable as UserContract;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Validation\ValidationException;
 use Orchestra\Testbench\TestCase;
 use PHPUnit\Framework\Assert as PHPUnit;
@@ -14,10 +15,12 @@ use function get_class;
 /**
  * @template TForm of \Illuminate\Foundation\Http\FormRequest
  *
- * @internal
+ * @mixin TForm
  */
 class PendingTestFormRequest
 {
+    use ForwardsCalls;
+
     /**
      * Create a new Pending Test.
      */
@@ -181,5 +184,13 @@ class PendingTestFormRequest
         }
 
         return $this;
+    }
+
+    /**
+     * Dynamically handle calls to the underlying Form Request.
+     */
+    public function __call(string $name, array $arguments): mixed
+    {
+        return $this->forwardCallTo($this->request, $name, $arguments);
     }
 }
