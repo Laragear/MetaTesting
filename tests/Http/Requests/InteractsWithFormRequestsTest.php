@@ -13,6 +13,9 @@ class InteractsWithFormRequestsTest extends TestCase
 {
     use InteractsWithFormRequests;
 
+    /**
+     * @var PendingTestFormRequest<TestFormRequest>
+     */
     protected PendingTestFormRequest $formRequest;
 
     protected function setUp(): void
@@ -143,6 +146,11 @@ class InteractsWithFormRequestsTest extends TestCase
 
         $this->formRequest->assertFormData(['foo' => 'quz']);
     }
+
+    public function test_forwards_call_to_form_request(): void
+    {
+        static::assertTrue($this->formRequest->callsFormRequest());
+    }
 }
 
 class TestFormRequest extends FormRequest
@@ -162,5 +170,10 @@ class TestFormRequest extends FormRequest
     public function passedValidation(): void
     {
         $this->request->set('baz', 'quz');
+    }
+
+    public function callsFormRequest(): true
+    {
+        return true;
     }
 }

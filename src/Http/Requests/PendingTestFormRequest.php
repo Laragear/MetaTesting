@@ -23,6 +23,8 @@ class PendingTestFormRequest
 
     /**
      * Create a new Pending Test.
+     *
+     * @param  TForm  $formRequest
      */
     public function __construct(protected TestCase $testCase, protected FormRequest $formRequest)
     {
@@ -191,6 +193,6 @@ class PendingTestFormRequest
      */
     public function __call(string $name, array $arguments): mixed
     {
-        return $this->forwardCallTo($this->request, $name, $arguments);
+        return $this->forwardCallTo($this->formRequest, $name, $arguments);
     }
 }
