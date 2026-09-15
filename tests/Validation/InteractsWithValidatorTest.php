@@ -17,7 +17,7 @@ class InteractsWithValidatorTest extends TestCase
 
         Validator::extend('test_rule', function ($key, $value): bool {
             return $value === 'bar';
-        });
+        }, 'test failed');
     }
 
     public function test_validates_rule(): void
@@ -46,5 +46,74 @@ class InteractsWithValidatorTest extends TestCase
         $this->expectExceptionMessage('The rule has not failed validation.');
 
         $this->assertValidationFails(['foo' => 'bar'], ['foo' => 'test_rule']);
+    }
+
+    public function test_pending_validation_passes(): void
+    {
+        $pending = $this->validation(['foo' => 'bar'], ['foo' => 'test_rule']);
+
+        $pending->assertPasses();
+    }
+
+    public function test_pending_validation_does_not_passes(): void
+    {
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage(<<<'MESSAGE'
+The rule [foo] didn't pass validation. Errors:
+- test failed
+MESSAGE
+        );
+
+        $pending = $this->validation(['foo' => 'quz'], ['foo' => 'test_rule']);
+
+        $pending->assertPasses();
+    }
+
+    public function test_pending_validation_fails(): void
+    {
+        $pending = $this->validation(['foo' => 'quz'], ['foo' => 'test_rule']);
+
+        $pending->assertFails();
+    }
+
+    public function test_pending_validation_does_not_fail(): void
+    {
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('The rule [foo] passed validation.');
+
+        $pending = $this->validation(['foo' => 'bar'], ['foo' => 'test_rule']);
+
+        $pending->assertFails();
+    }
+
+    public function test_pending_validation_fails_with_message(): void
+    {
+        $pending = $this->validation(['foo' => 'quz'], ['foo' => 'test_rule']);
+
+        $pending->assertFails('test failed');
+    }
+
+    public function test_pending_validation_does_not_fail_with_message(): void
+    {
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('The rule [foo] passed validation.');
+
+        $pending = $this->validation(['foo' => 'bar'], ['foo' => 'test_rule']);
+
+        $pending->assertFails('test failed');
+    }
+
+    public function test_pending_validation_without_message(): void
+    {
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage(<<<'MESSAGE'
+No message is equal to [invalid]. Found:
+- test failed
+MESSAGE
+        );
+
+        $pending = $this->validation(['foo' => 'quz'], ['foo' => 'test_rule']);
+
+        $pending->assertFails('invalid');
     }
 }
