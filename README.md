@@ -112,7 +112,7 @@ public function test_something_important(): void
 
 ### Validation
 
-This meta-package includes a `InteractsWithValidator` trait, that assert if a rule passes or fails using minimal data. This is useful when creating validation rules and testing them without too much boilerplate.
+This meta-package includes a `InteractsWithValidator` trait, that asserts if a rule passes or fails using minimal data through the `validation()` method. This is useful when creating validation rules and testing them without too much boilerplate.
 
 ```php
 use Laragear\MetaTesting\Validation\InteractsWithValidator;
@@ -120,10 +120,12 @@ use Laragear\MetaTesting\Validation\InteractsWithValidator;
 public function test_validation_rule(): void
 {
     // Assert the validation rule passes.
-    $this->assertValidationPasses(['test' => 'foo'],['test' => 'my_rule']);
+    $this->validation(['test' => 'foo'],['test' => 'my_rule'])
+        ->assertPasses();
     
     // Assert the validation rule fails.
-    $this->assertValidationFails(['test' => 'bar'],['test' => 'my_rule']);
+    $this->validation(['test' => 'bar'],['test' => 'my_rule'])
+        ->assertFails('The string was not [foo]. Received [bar]');
 }
 ```
 
@@ -195,10 +197,6 @@ public function test_cast()
 
 ### Eloquent Builder
 
-> [!TIP]
-> 
-> The Eloquent Builder is only available for Laravel v11.15.0 and later.
-
 To mock the Eloquent Builder of a Model, you may use the `InteractsWithEloquentBuilder` trait and use the `mockQueryFor()` method to make expectations on the builder itself by just calling the methods to chain.
 
 To break the chain, you may use `and()` with the final method to call and the results you want to return through the `andReturn()` or `andReturnUsing()`.
@@ -248,7 +246,7 @@ public function test_builder()
             $this->unmockQueryFor(User::class);
             
             return null;
-        });;
+        });
     });
     
     $this->assertNull(User::find(1));
